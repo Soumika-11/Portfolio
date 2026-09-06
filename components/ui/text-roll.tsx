@@ -40,18 +40,23 @@ export function TextRoll({
   const defaultVariants = {
     enter: {
       initial: { rotateX: 0 },
-      animate: { rotateX: 90 },
+      hover: { rotateX: 90 },
     },
     exit: {
-      initial: { rotateX: 90 },
-      animate: { rotateX: 0 },
+      initial: { rotateX: -90 },
+      hover: { rotateX: 0 },
     },
   } as const;
 
   const letters = children.split('');
 
   return (
-    <span className={className}>
+    <motion.span
+      className={className}
+      initial="initial"
+      whileHover="hover"
+      style={{ display: 'inline-flex', cursor: 'pointer' }}
+    >
       {letters.map((letter, i) => (
         <span
           key={i}
@@ -60,16 +65,20 @@ export function TextRoll({
         >
           <motion.span
             className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_25%]"
-            initial={variants?.enter?.initial ?? defaultVariants.enter.initial}
-            animate={variants?.enter?.animate ?? defaultVariants.enter.animate}
+            variants={{
+              initial: variants?.enter?.initial ?? defaultVariants.enter.initial,
+              hover: variants?.enter?.animate ?? defaultVariants.enter.hover,
+            }}
             transition={{ ...transition, duration, delay: getEnterDelay(i) }}
           >
             {letter === ' ' ? '\u00A0' : letter}
           </motion.span>
           <motion.span
             className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_100%]"
-            initial={variants?.exit?.initial ?? defaultVariants.exit.initial}
-            animate={variants?.exit?.animate ?? defaultVariants.exit.animate}
+            variants={{
+              initial: variants?.exit?.initial ?? defaultVariants.exit.initial,
+              hover: variants?.exit?.animate ?? defaultVariants.exit.hover,
+            }}
             transition={{ ...transition, duration, delay: getExitDelay(i) }}
             onAnimationComplete={
               letters.length === i + 1 ? onAnimationComplete : undefined
@@ -83,7 +92,7 @@ export function TextRoll({
         </span>
       ))}
       <span className="sr-only">{children}</span>
-    </span>
+    </motion.span>
   );
 }
 
