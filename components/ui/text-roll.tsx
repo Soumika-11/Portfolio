@@ -1,0 +1,98 @@
+'use client';
+import {
+  motion,
+  VariantLabels,
+  Target,
+  TargetAndTransition,
+  Transition,
+} from 'framer-motion';
+
+export type TextRollProps = {
+  children: string;
+  duration?: number;
+  getEnterDelay?: (index: number) => number;
+  getExitDelay?: (index: number) => number;
+  className?: string;
+  transition?: Transition;
+  variants?: {
+    enter: {
+      initial: Target | VariantLabels | boolean;
+      animate: TargetAndTransition | VariantLabels;
+    };
+    exit: {
+      initial: Target | VariantLabels | boolean;
+      animate: TargetAndTransition | VariantLabels;
+    };
+  };
+  onAnimationComplete?: () => void;
+};
+
+export function TextRoll({
+  children,
+  duration = 0.5,
+  getEnterDelay = (i) => i * 0.1,
+  getExitDelay = (i) => i * 0.1 + 0.2,
+  className,
+  transition = { ease: 'easeIn' },
+  variants,
+  onAnimationComplete,
+}: TextRollProps) {
+  const defaultVariants = {
+    enter: {
+      initial: { rotateX: 0 },
+      hover: { rotateX: 90 },
+    },
+    exit: {
+      initial: { rotateX: -90 },
+      hover: { rotateX: 0 },
+    },
+  } as const;
+
+  const letters = children.split('');
+
+  return (
+    <motion.span
+      className={className}
+      initial="initial"
+      whileHover="hover"
+      style={{ display: 'inline-flex', cursor: 'pointer' }}
+    >
+      {letters.map((letter, i) => (
+        <span
+          key={i}
+          className="relative inline-block [perspective:10000px] [transform-style:preserve-3d] [width:auto]"
+          aria-hidden="true"
+        >
+          <motion.span
+            className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_25%]"
+            variants={{
+              initial: variants?.enter?.initial ?? defaultVariants.enter.initial,
+              hover: variants?.enter?.animate ?? defaultVariants.enter.hover,
+            }}
+            transition={{ ...transition, duration, delay: getEnterDelay(i) }}
+          >
+            {letter === ' ' ? '\u00A0' : letter}
+          </motion.span>
+          <motion.span
+            className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_100%]"
+            variants={{
+              initial: variants?.exit?.initial ?? defaultVariants.exit.initial,
+              hover: variants?.exit?.animate ?? defaultVariants.exit.hover,
+            }}
+            transition={{ ...transition, duration, delay: getExitDelay(i) }}
+            onAnimationComplete={
+              letters.length === i + 1 ? onAnimationComplete : undefined
+            }
+          >
+            {letter === ' ' ? '\u00A0' : letter}
+          </motion.span>
+          <span className="invisible">
+            {letter === ' ' ? '\u00A0' : letter}
+          </span>
+        </span>
+      ))}
+      <span className="sr-only">{children}</span>
+    </motion.span>
+  );
+}
+
