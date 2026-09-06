@@ -1,7 +1,6 @@
 import { SceneProvider } from '@/components/portfolio/scene-context'
 import { Navbar } from '@/components/portfolio/navbar'
 import { Hero } from '@/components/portfolio/hero'
-import { CustomCursor } from '@/components/portfolio/custom-cursor'
 import { DiscoveryHints } from '@/components/portfolio/discovery-hints'
 import {
   AboutSection,
@@ -16,7 +15,6 @@ import {
 export default function Page() {
   return (
     <SceneProvider>
-      <CustomCursor />
       <Navbar />
       <main>
         <Hero />
