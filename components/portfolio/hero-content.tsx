@@ -3,6 +3,7 @@
 import { motion, type Variants } from 'framer-motion'
 import { ArrowRight, Download, Heart, PawPrint } from 'lucide-react'
 import { StatsPanel } from './stats-panel'
+import { TextRoll } from '@/components/ui/text-roll'
 
 const container: Variants = {
   hidden: {},
@@ -44,7 +45,13 @@ export function HeroContent() {
         variants={item}
         className="mt-3 flex items-center gap-2 text-lg font-semibold uppercase tracking-wide text-accent sm:text-xl"
       >
-        Full Stack Developer
+        <TextRoll
+          duration={0.45}
+          getEnterDelay={(i) => i * 0.06}
+          getExitDelay={(i) => i * 0.06 + 0.15}
+        >
+          Full Stack Developer
+        </TextRoll>
         <span className="font-mono text-primary">{'</>'}</span>
       </motion.p>
 
