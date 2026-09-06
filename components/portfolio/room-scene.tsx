@@ -364,7 +364,7 @@ export function RoomScene() {
       >
         <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-transparent transition group-hover:ring-white/25" />
         {lampBurst > 0 && (
-          <span key={lampBurst} className="pointer-events-none absolute inset-0">
+          <span className="pointer-events-none absolute inset-0">
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
@@ -399,11 +399,10 @@ export function RoomScene() {
           className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent transition group-hover:ring-primary/30"
           animate={coffeeBurst > 0 ? { rotate: [0, -6, 6, -3, 0] } : {}}
           transition={{ duration: 0.5 }}
-          key={coffeeBurst}
         />
         <Tooltip show={hover === 'coffee' && !spilled}>Fuel for the next deploy ☕</Tooltip>
         {coffeeBurst > 0 && !spilled && (
-          <span key={coffeeBurst} className="pointer-events-none absolute inset-x-0 top-0">
+          <span key={`burst-${coffeeBurst}`} className="pointer-events-none absolute inset-x-0 top-0">
             {[0, 1, 2].map((i) => (
               <span
                 key={i}

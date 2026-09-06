@@ -1,7 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { Cat, Menu, Moon, PawPrint, Sun, X } from 'lucide-react'
+import { Menu, Moon, PawPrint, Sun, X } from 'lucide-react'
 import { useScene } from './scene-context'
 
 const LINKS = [
@@ -28,16 +29,19 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'glass-panel border-b' : 'border-b border-transparent'
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${scrolled ? 'glass-panel border-b' : 'border-b border-transparent'
+        }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        <a href="#home" className="flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-primary/20 ring-1 ring-primary/40">
-            <Cat className="h-5 w-5 text-primary" />
-          </span>
-          <span className="font-script text-2xl leading-none text-foreground">Soumika.dev</span>
+        <a href="#home" className="outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full">
+          <Image
+            src="/logo.jpg"
+            alt="Soumika.dev logo"
+            width={44}
+            height={44}
+            className="rounded-full ring-1 ring-primary/40"
+            priority
+          />
         </a>
 
         <div className="hidden items-center gap-1 lg:flex">
