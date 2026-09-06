@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion, type Variants } from 'framer-motion'
 import {
   ArrowUpRight,
@@ -57,37 +58,38 @@ function Section({
 }
 
 const SKILLS: { group: string; icon: typeof Code2; items: string[] }[] = [
-  { group: 'Frontend', icon: Layout, items: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { group: 'Backend', icon: Server, items: ['Node.js', 'tRPC', 'GraphQL', 'REST APIs', 'Python'] },
-  { group: 'Data', icon: Database, items: ['PostgreSQL', 'Prisma', 'Redis', 'MongoDB'] },
-  { group: 'Cloud & Ops', icon: Cloud, items: ['Vercel', 'AWS', 'Docker', 'CI/CD'] },
+  { group: 'Frontend', icon: Layout, items: ['React', 'Next.js', 'Vite', 'TypeScript'] },
+  { group: 'Backend', icon: Server, items: ['Node.js', 'ASP.NET Core', 'FastAPI', 'C#', 'Python'] },
+  { group: 'Database & Ops', icon: Database, items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Docker', 'Linux'] },
+  { group: 'ML & AI', icon: Cloud, items: ['TensorFlow', 'PyTorch', 'OpenCV', 'NLP', 'CNN/LSTM'] },
 ]
 
 const PROJECTS = [
   {
-    title: 'Nimbus Analytics',
-    tag: 'SaaS Dashboard',
-    desc: 'Realtime analytics platform with streaming charts, role-based access and a polished design system.',
-    stack: ['Next.js', 'tRPC', 'Postgres'],
+    title: 'Real-Time Video Proctoring',
+    tag: 'AI System',
+    desc: 'Engineered exam monitoring with WebSocket, OpenCV & MediaPipe for reliable violation detection.',
+    stack: ['WebSocket', 'OpenCV', 'MediaPipe'],
   },
   {
-    title: 'Purrfect Commerce',
-    tag: 'E-commerce',
-    desc: 'Headless storefront with instant search, cart persistence and a buttery checkout flow.',
-    stack: ['React', 'Stripe', 'Redis'],
+    title: 'AI Resume Parser',
+    tag: 'NLP Tool',
+    desc: 'Built an NLP parser extracting structured JSON from PDFs; reduced screening time by 8hrs/week.',
+    stack: ['Python', 'NLP', 'JSON'],
   },
   {
-    title: 'Codenote',
-    tag: 'Developer Tool',
-    desc: 'Collaborative snippet manager with live cursors, syntax highlighting and AI explanations.',
-    stack: ['Next.js', 'WebSockets', 'AI SDK'],
+    title: 'Diaspora Job Marketplace',
+    tag: 'Job Platform',
+    desc: 'Launched a production job platform with JWT auth, OAuth, and payment integration.',
+    stack: ['Next.js', 'OAuth', 'Payments'],
   },
 ]
 
 const EXPERIENCE = [
-  { role: 'Full Stack Developer', org: 'Freelance & Open Source', period: '2024 — Present', desc: 'Shipping web apps end to end, from database schema to pixel-perfect interfaces.' },
-  { role: 'Frontend Engineer', org: 'Startup Studio', period: '2023 — 2024', desc: 'Built design systems and high-performance React interfaces used by thousands of users.' },
-  { role: 'Junior Developer', org: 'Web Agency', period: '2022 — 2023', desc: 'Delivered client websites and learned to balance speed, quality and caffeine.' },
+  { role: 'Software Engineer Intern', org: 'PepHub', period: 'Oct 2025 — Present', desc: 'Engineered 3 full-stack platforms (Next.js, ASP.NET Core, Vite) with fast load times and reliable payments. Managed 3 production deployments.' },
+  { role: 'Software Engineer Intern', org: 'Cardiacrhythm (HealthTech)', period: 'Jun 2025 — Sep 2025', desc: 'Built WebSocket real-time ECG streaming infrastructure supporting 200+ concurrent streams with latency reduced to 180ms.' },
+  { role: 'Software Engineer Intern', org: 'RevMaxx (HealthTech)', period: 'Jan 2025 — Jun 2025', desc: 'Developed HIPAA-compliant medical transcription backend and built an AI microservice for medical entity extraction using NLP.' },
+  { role: 'Research Engineer Intern', org: 'IEDC, UEM Kolkata', period: 'Dec 2024 — Dec 2025', desc: 'Developed brain tumor classification via CNN-LSTM. Architected the "Satyameba" HPC cluster with Ansible automation.' },
 ]
 
 export function AboutSection() {
@@ -99,10 +101,7 @@ export function AboutSection() {
           variants={reveal}
           className="glass-panel rounded-2xl p-6 text-pretty leading-relaxed text-muted-foreground lg:col-span-2"
         >
-          I&apos;m Soumika, a full stack developer who loves turning fuzzy ideas into fast, delightful
-          products. I care about the little details, from a well-typed API to a hover state that makes
-          you smile. When I&apos;m not shipping code, you&apos;ll find me with a warm cup of coffee and a
-          very opinionated cat supervising my commits.
+          I&apos;m Soumika, a Computer Science student and software engineer who loves turning fuzzy ideas into fast, delightful products. Currently pursuing my B.Tech at IEM Newtown, I specialize in full-stack development, backend systems, and AI/ML. When I&apos;m not shipping code, you&apos;ll find me with a warm cup of coffee and a very opinionated cat supervising my commits.
         </motion.p>
         <motion.div variants={reveal} className="glass-panel flex flex-col justify-center gap-4 rounded-2xl p-6">
           {[
@@ -190,7 +189,7 @@ export function ExperienceSection() {
         <div className="flex flex-col gap-8">
           {EXPERIENCE.map((e, i) => (
             <motion.div
-              key={e.role}
+              key={`${e.role}-${e.org}`}
               variants={reveal}
               className={`relative pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-10'}`}
             >
@@ -222,7 +221,9 @@ export function ResumeSection() {
           projects I&apos;m most proud of.
         </p>
         <a
-          href="#contact"
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Download CV
@@ -238,21 +239,23 @@ export function ContactSection() {
     <Section id="contact">
       <SectionHeading eyebrow="Contact" title="Let's build something" />
       <motion.div variants={reveal} className="glass-panel mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-3xl p-10 text-center">
+        <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-primary/20 sm:h-32 sm:w-32">
+          <Image src="/profile.jpg" alt="Soumika Das" fill className="object-cover" />
+        </div>
         <p className="text-pretty text-muted-foreground">
           Have a project, a role, or just want to talk about cats and clean code? My inbox is always open.
         </p>
         <a
-          href="mailto:hello@soumika.dev"
+          href="mailto:dassoumika11@gmail.com"
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <Mail className="h-4 w-4" />
-          hello@soumika.dev
+          dassoumika11@gmail.com
         </a>
         <div className="flex gap-3">
           {[
-            { icon: Code2, label: 'GitHub', href: 'https://github.com' },
-            { icon: LinkIcon, label: 'LinkedIn', href: 'https://linkedin.com' },
-            { icon: Globe, label: 'Website', href: 'https://example.com' },
+            { icon: Code2, label: 'GitHub', href: 'https://github.com/Soumika-11' },
+            { icon: LinkIcon, label: 'LinkedIn', href: 'https://www.linkedin.com/in/soumikadas/' },
           ].map((s) => (
             <a
               key={s.label}

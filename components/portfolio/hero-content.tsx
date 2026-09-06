@@ -65,7 +65,9 @@ export function HeroContent() {
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </a>
         <a
-          href="#resume"
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-full border border-primary/50 px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-primary/10 outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Download CV
