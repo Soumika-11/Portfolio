@@ -65,7 +65,7 @@ export function Navbar() {
       </div>
 
       {/* Anime nav — centered, hidden on mobile when hamburger is used */}
-      <div className="hidden lg:block pt-3">
+      <div className="hidden lg:block">
         <AnimeNavBar items={NAV_ITEMS} defaultActive="Home" />
       </div>
 
