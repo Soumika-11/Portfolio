@@ -1,6 +1,7 @@
 'use client';
 import {
   motion,
+  Variant,
   VariantLabels,
   Target,
   TargetAndTransition,
@@ -16,12 +17,12 @@ export type TextRollProps = {
   transition?: Transition;
   variants?: {
     enter: {
-      initial: Target | VariantLabels | boolean;
-      animate: TargetAndTransition | VariantLabels;
+      initial: Variant;
+      animate: Variant;
     };
     exit: {
-      initial: Target | VariantLabels | boolean;
-      animate: TargetAndTransition | VariantLabels;
+      initial: Variant;
+      animate: Variant;
     };
   };
   onAnimationComplete?: () => void;
@@ -39,14 +40,14 @@ export function TextRoll({
 }: TextRollProps) {
   const defaultVariants = {
     enter: {
-      initial: { rotateX: 0 },
-      hover: { rotateX: 90 },
+      initial: { rotateX: 0 } as Variant,
+      hover: { rotateX: 90 } as Variant,
     },
     exit: {
-      initial: { rotateX: -90 },
-      hover: { rotateX: 0 },
+      initial: { rotateX: -90 } as Variant,
+      hover: { rotateX: 0 } as Variant,
     },
-  } as const;
+  };
 
   const letters = children.split('');
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Home, User, Wrench, FolderOpen, Briefcase, FileText, Mail } from 'lucide-react'
+import { Home, User, Wrench, FolderOpen, Briefcase, FileText, Mail, BookOpen } from 'lucide-react'
 import { AnimeNavBar } from '@/components/ui/anime-navbar'
 import { Moon, Sun, PawPrint, Menu, X } from 'lucide-react'
 import { useScene } from './scene-context'
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { name: 'About', url: '#about', icon: User },
   { name: 'Skills', url: '#skills', icon: Wrench },
   { name: 'Projects', url: '#projects', icon: FolderOpen },
+  { name: 'Publications', url: '#publications', icon: BookOpen },
   { name: 'Experience', url: '#experience', icon: Briefcase },
   { name: 'Resume', url: '#resume', icon: FileText },
   { name: 'Contact', url: '#contact', icon: Mail },

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { motion, type Variants } from 'framer-motion'
 import {
   ArrowUpRight,
+  BookOpen,
   Cloud,
   Code2,
   Database,
@@ -82,6 +83,41 @@ const PROJECTS = [
     tag: 'Job Platform',
     desc: 'Launched a production job platform with JWT auth, OAuth, and payment integration.',
     stack: ['Next.js', 'OAuth', 'Payments'],
+  },
+]
+
+const PUBLICATIONS = [
+  {
+    title: 'Enhancing Brain Tumor Diagnosis with Ensemble Deep Learning Technique for Improved Accuracy',
+    altTitle: 'Brain Tumor Detection using CNN-LSTM',
+    conference: '2nd International Conference on Artificial Intelligence and Sustainable Computing (AISC 2025)',
+    venue: 'Springer AISC Series',
+    sponsors: 'Technically Co-Sponsored by IEEE Kolkata Section & Springer',
+    dates: 'July 24–26, 2025',
+    organizers:
+      'Dept. of IT, B. P. Poddar Institute of Management & Technology and A. K. Choudhury School of IT, University of Calcutta',
+    authors: [
+      { name: 'Apurba Nandi', isMe: false },
+      { name: 'Tista Mukherjee', isMe: false },
+      { name: 'Soumika Das', isMe: true },
+      { name: 'Nitu Saha', isMe: false },
+      { name: 'Sayantani Das', isMe: false },
+      { name: 'Sandip Mandal', isMe: false },
+    ],
+    summary:
+      'Engineered an ensemble deep learning framework combining Convolutional Neural Networks (CNN) and Long Short-Term Memory (LSTM) networks across 3,200+ MRI scans. Evaluated high diagnostic accuracy and robustness for multi-class brain tumor classification while reducing single-model variance.',
+    highlights: [
+      '3,200+ MRI Scans',
+      'CNN-LSTM Hybrid',
+      'Ensemble Learning',
+      'Springer AISC',
+      'IEEE Kolkata Section',
+    ],
+    image: '/paper-publication.jpg',
+    imageAlt: 'Certificate of Appreciation for AISC 2025 Conference Paper',
+    redirectUrl:
+      'https://www.linkedin.com/in/soumikadas/overlay/1768775586821/single-media-viewer/?profileId=ACoAADjotgUBcxQ5xZJAVK0yId5IZyYXuEPqmJo',
+    profileUrl: 'https://www.linkedin.com/in/soumikadas/',
   },
 ]
 
@@ -173,6 +209,150 @@ export function ProjectsSection() {
                 </li>
               ))}
             </ul>
+          </motion.article>
+        ))}
+      </div>
+    </Section>
+  )
+}
+
+export function PublicationsSection() {
+  return (
+    <Section id="publications">
+      <SectionHeading eyebrow="Research" title="Papers & Publications" />
+      <div className="flex flex-col gap-8">
+        {PUBLICATIONS.map((pub) => (
+          <motion.article
+            key={pub.title}
+            variants={reveal}
+            className="glass-panel group overflow-hidden rounded-3xl p-6 sm:p-8 transition hover:ring-primary/40"
+          >
+            <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+              {/* Image Preview & Redirect */}
+              <div className="relative lg:col-span-5">
+                <a
+                  href={pub.redirectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/img relative block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label="View paper certificate on LinkedIn"
+                >
+                  <div className="relative aspect-[800/559] w-full overflow-hidden">
+                    <Image
+                      src={pub.image}
+                      alt={pub.imageAlt}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover/img:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                    />
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 opacity-70 transition-opacity duration-300 group-hover/img:opacity-90" />
+
+                    {/* Overlay content */}
+                    <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded-full bg-primary/25 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md ring-1 ring-primary/50">
+                          AISC 2025 Certificate
+                        </span>
+                        <span className="grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md transition group-hover/img:bg-primary group-hover/img:text-primary-foreground">
+                          <ArrowUpRight className="h-4 w-4 transition group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 rounded-lg bg-black/40 px-3 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
+                        <LinkIcon className="h-3.5 w-3.5 text-primary" />
+                        <span>Click to view post on LinkedIn</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              {/* Publication Details */}
+              <div className="flex flex-col gap-4 lg:col-span-7">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary ring-1 ring-primary/30">
+                    {pub.venue}
+                  </span>
+                  <span className="rounded-full bg-accent/15 px-3 py-1 text-xs font-medium text-accent ring-1 ring-accent/30">
+                    IEEE Co-Sponsored
+                  </span>
+                  <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-muted-foreground ring-1 ring-border">
+                    {pub.dates}
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                    {pub.title}
+                  </h3>
+                  <p className="mt-1.5 text-xs font-medium text-primary sm:text-sm">
+                    {pub.conference}
+                  </p>
+                </div>
+
+                {/* Authors Box */}
+                <div className="rounded-xl bg-white/5 p-3.5 ring-1 ring-border/60">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Authors:
+                  </span>
+                  <p className="mt-1 text-xs leading-relaxed text-foreground/90">
+                    {pub.authors.map((author, i) => (
+                      <span key={author.name}>
+                        <span
+                          className={
+                            author.isMe
+                              ? 'font-bold text-primary underline underline-offset-2'
+                              : 'text-muted-foreground'
+                          }
+                        >
+                          {author.name}
+                        </span>
+                        {i < pub.authors.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </p>
+                </div>
+
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {pub.summary}
+                </p>
+
+                {/* Highlights tags */}
+                <ul className="flex flex-wrap gap-2 pt-1">
+                  {pub.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="rounded-full bg-white/5 px-3 py-1 text-xs text-muted-foreground ring-1 ring-border"
+                    >
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Actions */}
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <a
+                    href={pub.redirectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,108,182,0.4)] transition hover:shadow-[0_0_28px_rgba(255,108,182,0.7)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    View on LinkedIn
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                  <a
+                    href={pub.profileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-xs font-medium text-foreground transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <LinkIcon className="h-3.5 w-3.5" />
+                    LinkedIn Profile
+                  </a>
+                </div>
+              </div>
+            </div>
           </motion.article>
         ))}
       </div>
