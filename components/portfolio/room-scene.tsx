@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, PawPrint, Heart } from 'lucide-react'
 import { useScene } from './scene-context'
@@ -95,22 +95,31 @@ function GlowBloom({
   )
 }
 
-function Tooltip({ show, align = 'center', children }: { show: boolean; align?: 'left' | 'center' | 'right'; children: React.ReactNode }) {
+function Tooltip({
+  show,
+  align = 'center',
+  position = 'top',
+  children,
+}: {
+  show: boolean
+  align?: 'left' | 'center' | 'right'
+  position?: 'top' | 'bottom'
+  children: React.ReactNode
+}) {
   const alignClass =
-    align === 'left' ? 'left-0' :
-      align === 'right' ? 'right-0' :
-        'left-1/2 -translate-x-1/2';
+    align === 'left' ? 'left-0' : align === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
+  const posClass = position === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2'
 
   return (
     <AnimatePresence>
       {show && (
         <motion.span
           key="tooltip"
-          initial={{ opacity: 0, y: 6, scale: 0.95 }}
+          initial={{ opacity: 0, y: position === 'bottom' ? -4 : 4, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 6, scale: 0.95 }}
+          exit={{ opacity: 0, y: position === 'bottom' ? -4 : 4, scale: 0.95 }}
           transition={{ duration: 0.18 }}
-          className={`glass-panel pointer-events-none absolute bottom-full ${alignClass} z-30 mb-2 whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-medium text-foreground shadow-lg`}
+          className={`glass-panel pointer-events-none absolute ${posClass} ${alignClass} z-30 whitespace-nowrap rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-[11px] font-medium text-foreground shadow-lg`}
         >
           {children}
         </motion.span>
@@ -136,6 +145,16 @@ export function RoomScene() {
   const [lampBurst, setLampBurst] = useState(0)
   const [openLaptop, setOpenLaptop] = useState(false)
 
+  // Close laptop dialog on Escape
+  useEffect(() => {
+    if (!openLaptop) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpenLaptop(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [openLaptop])
+
   const day = state.theme === 'day'
   const girlActive = state.girl !== 'idle'
   const catAwake = state.cat !== 'sleeping'
@@ -146,13 +165,13 @@ export function RoomScene() {
     : 'brightness(1) saturate(1.02)'
 
   return (
-    <div className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-[1.75rem] ring-1 ring-white/10">
+    <div className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl">
       <Image
         src="/scene/room.png"
         alt="Soumika's cozy anime coding room at dusk: a cat-ear-headphone-wearing developer at her laptop, a pink MEOW DEVELOPER mug, a glowing cat lamp, a fluffy cat in matching headphones, and pink neon signs"
         fill
         priority
-        sizes="(max-width: 1024px) 100vw, 60vw"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 55vw"
         className="object-cover transition-[filter] duration-700"
         style={{ filter: imageFilter }}
       />
@@ -449,7 +468,7 @@ export function RoomScene() {
         style={boxStyle(POS.girl)}
       >
         <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-primary/25" />
-        <Tooltip show={hover === 'girl'}>
+        <Tooltip show={hover === 'girl'} position="bottom">
           {state.girl === 'typing' ? 'Deploying magic…' : 'Tap: start coding'}
         </Tooltip>
       </button>
@@ -521,7 +540,7 @@ export function RoomScene() {
       <AnimatePresence>
         {openLaptop && (
           <motion.div
-            className="absolute inset-0 z-40 flex items-center justify-center bg-background/70 p-4 backdrop-blur-sm"
+            className="absolute inset-0 z-40 flex items-center justify-center bg-background/75 p-3 sm:p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -530,13 +549,14 @@ export function RoomScene() {
             <motion.div
               role="dialog"
               aria-label="Developer code snippet"
-              className="glass-panel relative w-full max-w-sm rounded-2xl p-5"
+              aria-modal="true"
+              className="glass-panel relative w-[calc(100%-1rem)] max-w-sm rounded-2xl p-4 sm:p-5 max-h-[90%] flex flex-col shadow-2xl"
               initial={{ scale: 0.9, y: 10 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.92, y: 8 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="mb-3 flex items-center gap-1.5">
+              <div className="mb-3 flex items-center gap-1.5 shrink-0">
                 <span className="h-3 w-3 rounded-full bg-[#ff6b6b]" />
                 <span className="h-3 w-3 rounded-full bg-[#ffb27a]" />
                 <span className="h-3 w-3 rounded-full bg-[#8ce0c0]" />
@@ -545,12 +565,14 @@ export function RoomScene() {
                   type="button"
                   aria-label="Close code panel"
                   onClick={() => setOpenLaptop(false)}
-                  className="ml-auto rounded-md p-1 text-muted-foreground transition hover:bg-white/10 hover:text-foreground"
+                  className="ml-auto rounded-lg p-1.5 text-muted-foreground transition hover:bg-white/10 hover:text-foreground active:scale-95 touch-manipulation"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <LaptopCode active className="text-sm" speed={26} />
+              <div className="overflow-y-auto overscroll-contain">
+                <LaptopCode active className="text-xs sm:text-sm" speed={26} />
+              </div>
             </motion.div>
           </motion.div>
         )}

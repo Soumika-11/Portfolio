@@ -25,12 +25,12 @@ const reveal: Variants = {
 
 function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div className="mb-10 flex flex-col items-center text-center">
-      <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+    <div className="mb-8 sm:mb-12 flex flex-col items-center text-center px-2">
+      <span className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary">
         <PawPrint className="h-3.5 w-3.5" />
         {eyebrow}
       </span>
-      <h2 className="mt-3 font-script text-4xl text-foreground sm:text-5xl">{title}</h2>
+      <h2 className="mt-2 sm:mt-3 font-script text-3xl xs:text-4xl sm:text-5xl md:text-6xl text-foreground tracking-tight">{title}</h2>
     </div>
   )
 }
@@ -49,9 +49,13 @@ function Section({
       id={id}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-      className={`mx-auto max-w-6xl scroll-mt-24 px-4 py-20 sm:px-6 ${className}`}
+      className={`mx-auto max-w-6xl 2xl:max-w-7xl 3xl:max-w-[90rem] scroll-mt-20 sm:scroll-mt-24 px-3 xs:px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 ${className}`}
+      style={{
+        paddingLeft: 'max(0.75rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(0.75rem, env(safe-area-inset-right, 0px))',
+      }}
     >
       {children}
     </motion.section>
@@ -132,24 +136,24 @@ export function AboutSection() {
   return (
     <Section id="about">
       <SectionHeading eyebrow="About" title="Nice to meet you" />
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         <motion.p
           variants={reveal}
-          className="glass-panel rounded-2xl p-6 text-pretty leading-relaxed text-muted-foreground lg:col-span-2"
+          className="glass-panel rounded-2xl p-4 sm:p-6 text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground lg:col-span-2"
         >
           I&apos;m Soumika, a Computer Science student and software engineer who loves turning fuzzy ideas into fast, delightful products. Currently pursuing my B.Tech at IEM Newtown, I specialize in full-stack development, backend systems, and AI/ML. When I&apos;m not shipping code, you&apos;ll find me with a warm cup of coffee and a very opinionated cat supervising my commits.
         </motion.p>
-        <motion.div variants={reveal} className="glass-panel flex flex-col justify-center gap-4 rounded-2xl p-6">
+        <motion.div variants={reveal} className="glass-panel flex flex-col justify-center gap-3.5 sm:gap-4 rounded-2xl p-4 sm:p-6">
           {[
             { icon: Code2, label: 'Clean, typed, tested code' },
             { icon: Sparkles, label: 'Design-minded engineering' },
             { icon: PawPrint, label: 'Cat-approved commits' },
           ].map((r) => (
             <div key={r.label} className="flex items-center gap-3">
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-primary/15 ring-1 ring-primary/30">
+              <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-full bg-primary/15 ring-1 ring-primary/30">
                 <r.icon className="h-4 w-4 text-primary" />
               </span>
-              <span className="text-sm text-foreground">{r.label}</span>
+              <span className="text-xs sm:text-sm text-foreground font-medium">{r.label}</span>
             </div>
           ))}
         </motion.div>
@@ -162,16 +166,16 @@ export function SkillsSection() {
   return (
     <Section id="skills">
       <SectionHeading eyebrow="Skills" title="My toolbox" />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
         {SKILLS.map((s) => (
-          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-6">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
-              <s.icon className="h-5 w-5 text-primary" />
+          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-4 sm:p-6">
+            <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
+              <s.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             </span>
-            <h3 className="mt-4 text-lg font-semibold text-foreground">{s.group}</h3>
-            <ul className="mt-3 flex flex-wrap gap-2">
+            <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-foreground">{s.group}</h3>
+            <ul className="mt-2.5 sm:mt-3 flex flex-wrap gap-1.5 sm:gap-2">
               {s.items.map((i) => (
-                <li key={i} className="rounded-full bg-white/5 px-3 py-1 text-xs text-muted-foreground ring-1 ring-border">
+                <li key={i} className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] sm:text-xs text-muted-foreground ring-1 ring-border">
                   {i}
                 </li>
               ))}
@@ -187,24 +191,26 @@ export function ProjectsSection() {
   return (
     <Section id="projects">
       <SectionHeading eyebrow="Projects" title="Things I've built" />
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {PROJECTS.map((p) => (
           <motion.article
             key={p.title}
             variants={reveal}
-            className="glass-panel group flex flex-col rounded-2xl p-6 transition hover:ring-primary/40"
+            className="glass-panel group flex flex-col justify-between rounded-2xl p-4 sm:p-6 transition hover:ring-primary/40"
           >
-            <div className="flex items-start justify-between">
-              <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/30">
-                {p.tag}
-              </span>
-              <ArrowUpRight className="h-5 w-5 text-muted-foreground transition group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <div>
+              <div className="flex items-start justify-between">
+                <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary ring-1 ring-primary/30">
+                  {p.tag}
+                </span>
+                <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground transition group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </div>
+              <h3 className="mt-3 sm:mt-4 text-lg sm:text-xl font-semibold text-foreground tracking-tight">{p.title}</h3>
+              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
             </div>
-            <h3 className="mt-4 text-xl font-semibold text-foreground">{p.title}</h3>
-            <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-wrap gap-1.5 sm:gap-2 pt-2">
               {p.stack.map((t) => (
-                <li key={t} className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-muted-foreground ring-1 ring-border">
+                <li key={t} className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
                   {t}
                 </li>
               ))}
@@ -220,21 +226,21 @@ export function PublicationsSection() {
   return (
     <Section id="publications">
       <SectionHeading eyebrow="Research" title="Papers & Publications" />
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6 sm:gap-8">
         {PUBLICATIONS.map((pub) => (
           <motion.article
             key={pub.title}
             variants={reveal}
-            className="glass-panel group overflow-hidden rounded-3xl p-6 sm:p-8 transition hover:ring-primary/40"
+            className="glass-panel group overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 transition hover:ring-primary/40"
           >
-            <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+            <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-center">
               {/* Image Preview & Redirect */}
               <div className="relative lg:col-span-5">
                 <a
                   href={pub.redirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/img relative block overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-2xl transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="group/img relative block overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-black/20 shadow-2xl transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label="View paper certificate on LinkedIn"
                 >
                   <div className="relative aspect-[800/559] w-full overflow-hidden">
@@ -249,19 +255,19 @@ export function PublicationsSection() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 opacity-70 transition-opacity duration-300 group-hover/img:opacity-90" />
 
                     {/* Overlay content */}
-                    <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
+                    <div className="absolute inset-0 flex flex-col justify-between p-3 xs:p-4 sm:p-5">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="rounded-full bg-primary/25 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md ring-1 ring-primary/50">
+                        <span className="rounded-full bg-primary/25 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-white backdrop-blur-md ring-1 ring-primary/50">
                           AISC 2025 Certificate
                         </span>
-                        <span className="grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md transition group-hover/img:bg-primary group-hover/img:text-primary-foreground">
-                          <ArrowUpRight className="h-4 w-4 transition group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
+                        <span className="grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md transition group-hover/img:bg-primary group-hover/img:text-primary-foreground">
+                          <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2 rounded-lg bg-black/40 px-3 py-2 text-xs font-medium text-white/90 backdrop-blur-sm">
-                        <LinkIcon className="h-3.5 w-3.5 text-primary" />
-                        <span>Click to view post on LinkedIn</span>
+                      <div className="flex items-center gap-2 rounded-lg bg-black/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs font-medium text-white/90 backdrop-blur-sm">
+                        <LinkIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary shrink-0" />
+                        <span className="truncate">Click to view post on LinkedIn</span>
                       </div>
                     </div>
                   </div>
@@ -269,34 +275,34 @@ export function PublicationsSection() {
               </div>
 
               {/* Publication Details */}
-              <div className="flex flex-col gap-4 lg:col-span-7">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary ring-1 ring-primary/30">
+              <div className="flex flex-col gap-3.5 sm:gap-4 lg:col-span-7">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="rounded-full bg-primary/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-primary ring-1 ring-primary/30">
                     {pub.venue}
                   </span>
-                  <span className="rounded-full bg-accent/15 px-3 py-1 text-xs font-medium text-accent ring-1 ring-accent/30">
+                  <span className="rounded-full bg-accent/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
                     IEEE Co-Sponsored
                   </span>
-                  <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-muted-foreground ring-1 ring-border">
+                  <span className="rounded-full bg-white/5 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs text-muted-foreground ring-1 ring-border">
                     {pub.dates}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  <h3 className="text-lg xs:text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">
                     {pub.title}
                   </h3>
-                  <p className="mt-1.5 text-xs font-medium text-primary sm:text-sm">
+                  <p className="mt-1 text-xs sm:text-sm font-medium text-primary">
                     {pub.conference}
                   </p>
                 </div>
 
                 {/* Authors Box */}
-                <div className="rounded-xl bg-white/5 p-3.5 ring-1 ring-border/60">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-xl bg-white/5 p-3 sm:p-3.5 ring-1 ring-border/60">
+                  <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Authors:
                   </span>
-                  <p className="mt-1 text-xs leading-relaxed text-foreground/90">
+                  <p className="mt-1 text-xs leading-relaxed text-foreground/90 break-words">
                     {pub.authors.map((author, i) => (
                       <span key={author.name}>
                         <span
@@ -314,16 +320,16 @@ export function PublicationsSection() {
                   </p>
                 </div>
 
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
                   {pub.summary}
                 </p>
 
                 {/* Highlights tags */}
-                <ul className="flex flex-wrap gap-2 pt-1">
+                <ul className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
                   {pub.highlights.map((h) => (
                     <li
                       key={h}
-                      className="rounded-full bg-white/5 px-3 py-1 text-xs text-muted-foreground ring-1 ring-border"
+                      className="rounded-full bg-white/5 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs text-muted-foreground ring-1 ring-border"
                     >
                       {h}
                     </li>
@@ -331,12 +337,12 @@ export function PublicationsSection() {
                 </ul>
 
                 {/* Actions */}
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+                <div className="flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3 pt-2">
                   <a
                     href={pub.redirectUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,108,182,0.4)] transition hover:shadow-[0_0_28px_rgba(255,108,182,0.7)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,108,182,0.4)] transition hover:shadow-[0_0_28px_rgba(255,108,182,0.7)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
                   >
                     View on LinkedIn
                     <ArrowUpRight className="h-3.5 w-3.5" />
@@ -345,7 +351,7 @@ export function PublicationsSection() {
                     href={pub.profileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full ring-1 ring-border px-5 py-2.5 text-xs font-medium text-foreground transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full ring-1 ring-border px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-medium text-foreground transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
                   >
                     <LinkIcon className="h-3.5 w-3.5" />
                     LinkedIn Profile
@@ -365,20 +371,24 @@ export function ExperienceSection() {
     <Section id="experience">
       <SectionHeading eyebrow="Experience" title="My journey" />
       <div className="relative mx-auto max-w-3xl">
-        <div className="absolute left-3 top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-accent/40 to-transparent sm:left-1/2" />
-        <div className="flex flex-col gap-8">
+        <div className="absolute left-3 sm:left-1/2 top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-accent/40 to-transparent" />
+        <div className="flex flex-col gap-6 sm:gap-8">
           {EXPERIENCE.map((e, i) => (
             <motion.div
               key={`${e.role}-${e.org}`}
               variants={reveal}
-              className={`relative pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-10'}`}
+              className={`relative pl-8 xs:pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-8 md:sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-8 md:sm:pl-10'
+                }`}
             >
-              <span className={`absolute left-1.5 top-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20 sm:left-auto ${i % 2 === 0 ? 'sm:-right-1.5' : 'sm:-left-1.5'}`} />
-              <div className="glass-panel rounded-2xl p-5">
-                <span className="text-xs font-semibold uppercase tracking-wide text-accent">{e.period}</span>
-                <h3 className="mt-1 text-lg font-semibold text-foreground">{e.role}</h3>
-                <p className="text-sm text-primary">{e.org}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{e.desc}</p>
+              <span
+                className={`absolute left-1.5 top-2 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20 sm:left-auto ${i % 2 === 0 ? 'sm:-right-1.5' : 'sm:-left-1.5'
+                  }`}
+              />
+              <div className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-5">
+                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-accent">{e.period}</span>
+                <h3 className="mt-1 text-base sm:text-lg font-semibold text-foreground">{e.role}</h3>
+                <p className="text-xs sm:text-sm text-primary font-medium">{e.org}</p>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{e.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -391,12 +401,12 @@ export function ExperienceSection() {
 export function ResumeSection() {
   return (
     <Section id="resume">
-      <motion.div variants={reveal} className="glass-panel flex flex-col items-center gap-5 rounded-3xl p-10 text-center">
-        <span className="grid h-14 w-14 place-items-center rounded-2xl bg-primary/15 ring-1 ring-primary/30">
-          <Download className="h-6 w-6 text-primary" />
+      <motion.div variants={reveal} className="glass-panel flex flex-col items-center gap-4 sm:gap-5 rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center">
+        <span className="grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-2xl bg-primary/15 ring-1 ring-primary/30">
+          <Download className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
         </span>
-        <h2 className="font-script text-4xl text-foreground sm:text-5xl">Grab my resume</h2>
-        <p className="max-w-md text-pretty text-muted-foreground">
+        <h2 className="font-script text-3xl xs:text-4xl sm:text-5xl text-foreground">Grab my resume</h2>
+        <p className="max-w-md text-pretty text-xs sm:text-sm text-muted-foreground">
           Want the full story? Download my CV for a detailed look at my experience, skills and the
           projects I&apos;m most proud of.
         </p>
@@ -404,7 +414,7 @@ export function ResumeSection() {
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 sm:px-6 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
         >
           Download CV
           <Download className="h-4 w-4" />
@@ -418,19 +428,19 @@ export function ContactSection() {
   return (
     <Section id="contact">
       <SectionHeading eyebrow="Contact" title="Let's build something" />
-      <motion.div variants={reveal} className="glass-panel mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-3xl p-10 text-center">
-        <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-primary/20 sm:h-32 sm:w-32">
-          <Image src="/profile.jpg" alt="Soumika Das" fill className="object-cover" />
+      <motion.div variants={reveal} className="glass-panel mx-auto flex max-w-2xl flex-col items-center gap-5 sm:gap-6 rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center">
+        <div className="relative h-20 w-20 xs:h-24 xs:w-24 sm:h-32 sm:w-32 overflow-hidden rounded-full ring-4 ring-primary/20 shrink-0">
+          <Image src="/profile.jpg" alt="Soumika Das" fill className="object-cover" sizes="128px" />
         </div>
-        <p className="text-pretty text-muted-foreground">
+        <p className="text-pretty text-xs sm:text-sm text-muted-foreground">
           Have a project, a role, or just want to talk about cats and clean code? My inbox is always open.
         </p>
         <a
           href="mailto:dassoumika11@gmail.com"
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="inline-flex w-full xs:w-auto max-w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 sm:px-6 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
         >
-          <Mail className="h-4 w-4" />
-          dassoumika11@gmail.com
+          <Mail className="h-4 w-4 shrink-0" />
+          <span className="truncate sm:overflow-visible">dassoumika11@gmail.com</span>
         </a>
         <div className="flex gap-3">
           {[
@@ -443,7 +453,7 @@ export function ContactSection() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.label}
-              className="grid h-11 w-11 place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="grid h-11 w-11 min-w-[44px] min-h-[44px] place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary touch-manipulation"
             >
               <s.icon className="h-5 w-5" />
             </a>
@@ -456,7 +466,10 @@ export function ContactSection() {
 
 export function Footer() {
   return (
-    <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
+    <footer
+      className="border-t border-border py-6 sm:py-8 text-center text-xs sm:text-sm text-muted-foreground px-4"
+      style={{ paddingBottom: 'max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))' }}
+    >
       <p className="flex items-center justify-center gap-1.5">
         Built with <span className="text-primary">♥</span> and a lot of caffeine by Soumika ☕🐱
       </p>

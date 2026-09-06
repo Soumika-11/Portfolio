@@ -23,27 +23,27 @@ export function HeroContent() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="relative z-10 max-w-xl"
+      className="relative z-10 w-full max-w-xl"
     >
       <motion.p
         variants={item}
-        className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.25em] text-primary"
+        className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary"
       >
-        <PawPrint className="h-4 w-4" />
+        <PawPrint className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
         Hello, I&apos;m
       </motion.p>
 
       <motion.h1
         variants={item}
-        className="mt-2 flex items-center gap-3 font-script text-6xl leading-none text-foreground text-glow-neon sm:text-7xl lg:text-8xl"
+        className="mt-2 flex items-center gap-2 sm:gap-3 font-script text-5xl xs:text-6xl sm:text-7xl lg:text-8xl leading-none text-foreground text-glow-neon"
       >
         Soumika
-        <Heart className="h-8 w-8 shrink-0 fill-primary text-primary sm:h-10 sm:w-10" />
+        <Heart className="h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 shrink-0 fill-primary text-primary" />
       </motion.h1>
 
       <motion.p
         variants={item}
-        className="mt-3 flex items-center gap-2 text-lg font-semibold uppercase tracking-wide text-accent sm:text-xl"
+        className="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-2 text-base xs:text-lg sm:text-xl font-semibold uppercase tracking-wide text-accent"
       >
         <TextRoll
           duration={0.45}
@@ -57,16 +57,16 @@ export function HeroContent() {
 
       <motion.p
         variants={item}
-        className="mt-5 max-w-md text-pretty text-base leading-relaxed text-muted-foreground"
+        className="mt-4 sm:mt-5 max-w-md text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground"
       >
         I build scalable web applications and delightful digital experiences with code,
         creativity and a lot of caffeine.
       </motion.p>
 
-      <motion.div variants={item} className="mt-7 flex flex-wrap gap-3">
+      <motion.div variants={item} className="mt-6 sm:mt-7 flex flex-col xs:flex-row flex-wrap gap-2.5 sm:gap-3">
         <a
           href="#projects"
-          className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="group inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 sm:px-6 sm:py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]"
         >
           Explore My Work
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -75,14 +75,14 @@ export function HeroContent() {
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-primary/50 px-6 py-3 text-sm font-semibold text-foreground transition hover:bg-primary/10 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full border border-primary/50 px-5 py-3 sm:px-6 sm:py-3 text-sm font-semibold text-foreground transition hover:bg-primary/10 outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-[0.98]"
         >
           Download CV
           <Download className="h-4 w-4" />
         </a>
       </motion.div>
 
-      <motion.div variants={item} className="mt-8">
+      <motion.div variants={item} className="mt-6 sm:mt-8 w-full">
         <StatsPanel />
       </motion.div>
     </motion.div>

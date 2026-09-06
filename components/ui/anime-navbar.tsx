@@ -27,15 +27,39 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+
+    // Scroll spy to update active nav tab automatically
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id")
+            const matched = items.find((item) => item.url === `#${id}`)
+            if (matched) {
+              setActiveTab(matched.name)
+            }
+          }
+        })
+      },
+      { rootMargin: "-30% 0px -60% 0px" }
+    )
+
+    items.forEach((item) => {
+      const id = item.url.replace("#", "")
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [items])
 
   if (!mounted) return null
 
   return (
-    <div className={cn("flex justify-center", className)}>
+    <nav aria-label="Main Navigation" className={cn("flex justify-center", className)}>
       <div className="relative">
         <motion.div
-          className="flex items-center gap-2 bg-transparent py-3 px-3 rounded-full"
+          className="flex items-center gap-0.5 sm:gap-1 lg:gap-1 xl:gap-1.5 2xl:gap-2 bg-transparent py-1 sm:py-2 px-1 sm:px-2 rounded-full"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -43,20 +67,19 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
           {items.map((item) => {
             const Icon = item.icon
             const isActive = activeTab === item.name
-            const isHovered = hoveredTab === item.name
 
             return (
               <LiquidButton
                 key={item.name}
                 asChild
                 className={cn(
-                  "!rounded-full transition-all duration-300",
+                  "!rounded-full !h-auto transition-all duration-300",
                   isActive
                     ? "shadow-[0_0_15px_rgba(255,108,182,0.3)] ring-1 ring-primary/60"
                     : "hover:shadow-[0_0_15px_rgba(255,108,182,0.2)] hover:ring-1 hover:ring-primary/50"
                 )}
                 variant="default"
-                size="xl"
+                size="default"
               >
                 <Link
                   href={item.url}
@@ -69,28 +92,19 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
                   onMouseEnter={() => setHoveredTab(item.name)}
                   onMouseLeave={() => setHoveredTab(null)}
                   className={cn(
-                    "relative cursor-pointer text-base font-medium px-6 py-3 transition-all duration-300",
-                    "text-white/75 hover:text-white tracking-wide",
+                    "relative cursor-pointer font-medium transition-all duration-300",
+                    "text-white/75 hover:text-white tracking-normal sm:tracking-wide",
+                    "px-2.5 py-1.5 text-xs lg:px-2.5 lg:py-1.5 lg:text-xs xl:px-3.5 xl:py-2 xl:text-sm 2xl:px-5 2xl:py-2.5 2xl:text-base",
                     isActive && "text-white font-bold"
                   )}
                 >
-                  {/* Desktop: text */}
-                  <span className="hidden md:inline relative z-10">{item.name}</span>
-
-                  {/* Mobile: icon */}
-                  <motion.span
-                    className="md:hidden relative z-10"
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Icon size={18} strokeWidth={2.5} />
-                  </motion.span>
+                  <span className="relative z-10">{item.name}</span>
                 </Link>
               </LiquidButton>
             )
           })}
         </motion.div>
       </div>
-    </div>
+    </nav>
   )
 }

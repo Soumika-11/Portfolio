@@ -11,7 +11,7 @@ export function ScrollIndicator() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 1.8, duration: 0.8 }}
-      className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground transition hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
+      className="absolute bottom-4 sm:bottom-6 left-1/2 z-20 hidden md:flex -translate-x-1/2 flex-col items-center gap-1.5 sm:gap-2 text-muted-foreground transition hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
     >
       <span className="flex h-9 w-5 items-start justify-center rounded-full border border-current p-1">
         <motion.span
