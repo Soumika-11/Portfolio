@@ -3,7 +3,7 @@
 import { Cat, Code2, Coffee, Rocket } from 'lucide-react'
 
 const STATS = [
-  { icon: Code2, value: '5+', label: 'Projects' },
+  { icon: Code2, value: '6+', label: 'Projects' },
   { icon: Rocket, value: '1+', label: 'Years Experience' },
   { icon: Coffee, value: '1000+', label: 'Cups of Coffee' },
   { icon: Cat, value: '∞', label: 'Passion' },

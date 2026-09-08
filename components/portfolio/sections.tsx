@@ -5,6 +5,7 @@ import { motion, type Variants } from 'framer-motion'
 import {
   ArrowUpRight,
   BookOpen,
+  Brain,
   Cloud,
   Code2,
   Database,
@@ -16,6 +17,7 @@ import {
   PawPrint,
   Server,
   Sparkles,
+  Terminal,
 } from 'lucide-react'
 
 const reveal: Variants = {
@@ -63,24 +65,92 @@ function Section({
 }
 
 const SKILLS: { group: string; icon: typeof Code2; items: string[] }[] = [
-  { group: 'Frontend', icon: Layout, items: ['React', 'Next.js', 'Vite', 'TypeScript'] },
-  { group: 'Backend', icon: Server, items: ['Node.js', 'ASP.NET Core', 'FastAPI', 'C#', 'Python'] },
-  { group: 'Database & Ops', icon: Database, items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Docker', 'Linux'] },
-  { group: 'ML & AI', icon: Cloud, items: ['TensorFlow', 'PyTorch', 'OpenCV', 'NLP', 'CNN/LSTM'] },
+  {
+    group: 'Languages',
+    icon: Code2,
+    items: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C++'],
+  },
+  {
+    group: 'Frontend',
+    icon: Layout,
+    items: ['React', 'Next.js', 'JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Vite'],
+  },
+  {
+    group: 'Backend',
+    icon: Server,
+    items: ['Node.js', 'Express', 'Django', 'FastAPI', 'ASP.NET Core', 'REST APIs'],
+  },
+  {
+    group: 'Databases',
+    icon: Database,
+    items: ['PostgreSQL', 'MySQL', 'MSSQL', 'MongoDB'],
+  },
+  {
+    group: 'DevOps & Operations',
+    icon: Terminal,
+    items: ['Docker', 'Linux', 'Windows', 'DNS Management', 'Domain Routing', 'Nginx', 'CI/CD'],
+  },
+  {
+    group: 'ML & Deep Learning',
+    icon: Brain,
+    items: [
+      'Ensemble Learning',
+      'CNN',
+      'U-Net',
+      'MobileNetV2',
+      'DenseNet169',
+      'LSTM',
+      'PyTorch',
+      'TensorFlow',
+      'OpenCV',
+      'NLP',
+    ],
+  },
 ]
 
-const PROJECTS = [
+interface Project {
+  title: string
+  tag: string
+  desc: string
+  stack: string[]
+  link?: string
+}
+
+const PROJECTS: Project[] = [
+  {
+    title: 'BONAP Botanical Scraper & Portal',
+    tag: 'Web Scraper',
+    desc: 'Architected an automated botanical web scraper and ETL pipeline extracting plant taxonomy, county distribution maps, and morphological data across BONAP, USDA, and GBIF. Powers an interactive plant comparison portal with synonym resolution and AI-generated summaries.',
+    stack: ['Python', 'Web Scraping', 'Express', 'Node.js'],
+    link: 'https://portal.bonap.info',
+  },
+  {
+    title: 'DeepTrust Verification API',
+    tag: 'Computer Vision',
+    desc: 'Engineered an automated degree verification API using OpenCV and Tesseract OCR to cross-verify QR code payloads against academic document text with confidence scoring.',
+    stack: ['Python', 'OpenCV', 'Tesseract OCR', 'Computer Vision'],
+    link: 'https://github.com/Soumika-11/deeptrust',
+  },
+  {
+    title: 'Photography UK',
+    tag: 'Web Platform',
+    desc: 'Full-stack photography portfolio and event booking platform with dynamic image galleries, client scheduling workflows, and retail merchandise checkout.',
+    stack: ['Next.js', 'React', 'Tailwind CSS', 'JavaScript'],
+    link: 'https://github.com/Soumika-11/Photography-UK',
+  },
   {
     title: 'Real-Time Video Proctoring',
     tag: 'AI System',
     desc: 'Engineered exam monitoring with WebSocket, OpenCV & MediaPipe for reliable violation detection.',
     stack: ['WebSocket', 'OpenCV', 'MediaPipe'],
+    link: 'https://github.com/Soumika-11/Video-Proctor',
   },
   {
     title: 'AI Resume Parser',
     tag: 'NLP Tool',
     desc: 'Built an NLP parser extracting structured JSON from PDFs; reduced screening time by 8hrs/week.',
     stack: ['Python', 'NLP', 'JSON'],
+    link: 'https://github.com/Soumika-11/Resume-Parser',
   },
   {
     title: 'Diaspora Job Marketplace',
@@ -166,18 +236,18 @@ export function SkillsSection() {
   return (
     <Section id="skills">
       <SectionHeading eyebrow="Skills" title="My toolbox" />
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {SKILLS.map((s) => (
-          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-3 sm:p-5">
-            <div className="flex items-center gap-2">
-              <span className="grid h-7 w-7 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-lg sm:rounded-xl bg-primary/15 ring-1 ring-primary/30">
-                <s.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-4 sm:p-5">
+            <div className="flex items-center gap-2.5">
+              <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-lg sm:rounded-xl bg-primary/15 ring-1 ring-primary/30">
+                <s.icon className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-primary" />
               </span>
               <h3 className="text-sm sm:text-base font-semibold text-foreground leading-tight">{s.group}</h3>
             </div>
-            <ul className="mt-2.5 flex flex-wrap gap-1 sm:gap-1.5">
+            <ul className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
               {s.items.map((i) => (
-                <li key={i} className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
+                <li key={i} className="rounded-full bg-white/5 px-2.5 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
                   {i}
                 </li>
               ))}
@@ -193,32 +263,66 @@ export function ProjectsSection() {
   return (
     <Section id="projects">
       <SectionHeading eyebrow="Projects" title="Things I've built" />
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {PROJECTS.map((p) => (
-          <motion.article
-            key={p.title}
-            variants={reveal}
-            className="glass-panel group flex flex-col justify-between rounded-2xl p-4 sm:p-6 transition hover:ring-primary/40"
-          >
-            <div>
-              <div className="flex items-start justify-between">
-                <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary ring-1 ring-primary/30">
-                  {p.tag}
-                </span>
-                <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground transition group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {PROJECTS.map((p) => {
+          const cardContent = (
+            <>
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <span className="rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary ring-1 ring-primary/30">
+                    {p.tag}
+                  </span>
+                  {p.link && (
+                    <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground transition group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  )}
+                </div>
+                <h3 className="mt-3 sm:mt-4 text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  {p.title}
+                </h3>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
               </div>
-              <h3 className="mt-3 sm:mt-4 text-lg sm:text-xl font-semibold text-foreground tracking-tight">{p.title}</h3>
-              <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
-            </div>
-            <ul className="mt-4 flex flex-wrap gap-1.5 sm:gap-2 pt-2">
-              {p.stack.map((t) => (
-                <li key={t} className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </motion.article>
-        ))}
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 pt-2">
+                <ul className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {p.stack.map((t) => (
+                    <li
+                      key={t}
+                      className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border"
+                    >
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                {p.link && (
+                  <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-primary transition group-hover:underline">
+                    {p.link.includes('github.com') ? 'View Code' : 'Live Portal'}{' '}
+                    <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                  </span>
+                )}
+              </div>
+            </>
+          )
+
+          return p.link ? (
+            <motion.a
+              key={p.title}
+              href={p.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={reveal}
+              className="glass-panel group flex flex-col justify-between rounded-2xl p-4 sm:p-6 transition hover:ring-primary/40 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            >
+              {cardContent}
+            </motion.a>
+          ) : (
+            <motion.article
+              key={p.title}
+              variants={reveal}
+              className="glass-panel group flex flex-col justify-between rounded-2xl p-4 sm:p-6 transition hover:ring-primary/40"
+            >
+              {cardContent}
+            </motion.article>
+          )
+        })}
       </div>
     </Section>
   )
