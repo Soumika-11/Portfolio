@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useCallback,
+  useEffect,
   useMemo,
   useReducer,
   useRef,
@@ -94,6 +95,16 @@ export function SceneProvider({ children }: { children: ReactNode }) {
   const toggleNeon = useCallback(() => dispatch({ type: 'TOGGLE_NEON' }), [])
   const toggleLamp = useCallback(() => dispatch({ type: 'TOGGLE_LAMP' }), [])
   const toggleTheme = useCallback(() => dispatch({ type: 'TOGGLE_THEME' }), [])
+
+  // Sync .light class on <html> so CSS variables flip for the whole page
+  useEffect(() => {
+    const html = document.documentElement
+    if (state.theme === 'day') {
+      html.classList.add('light')
+    } else {
+      html.classList.remove('light')
+    }
+  }, [state.theme])
 
   const toggleCoffee = useCallback(() => {
     dispatch({ type: 'SET_COFFEE', value: 'steaming' })

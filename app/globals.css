@@ -65,7 +65,7 @@
   --secondary-foreground: #f6edff;
   --muted: #241a3c;
   --muted-foreground: #b9a7d8;
-  --accent: #b89bf0;
+  --accent: #9b7de8;
   --accent-foreground: #1a1030;
   --destructive: #ff6b6b;
   --border: rgba(198, 168, 255, 0.16);
@@ -80,6 +80,38 @@
 
   --aurora-color1: rgba(168, 85, 247, 0.2);
   --aurora-color2: rgba(79, 70, 229, 0.2);
+}
+
+/* ===== Light mode overrides (applied via .light class on <html>) ===== */
+html.light {
+  color-scheme: light;
+
+  --background: #fdf6ff;
+  --foreground: #1a0f2e;
+  --card: #ffffff;
+  --card-foreground: #1a0f2e;
+  --popover: #ffffff;
+  --popover-foreground: #1a0f2e;
+  --primary: #e8489a;
+  --primary-foreground: #ffffff;
+  --secondary: #ede6fa;
+  --secondary-foreground: #1a0f2e;
+  --muted: #f0e8fc;
+  --muted-foreground: #6b5987;
+  --accent: #7c5cbf;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --border: rgba(155, 120, 220, 0.22);
+  --input: rgba(155, 120, 220, 0.18);
+  --ring: #e8489a;
+
+  --neon: #e8489a;
+  --lavender: #7c5cbf;
+  --peach: #f59640;
+  --sunset: #e8729a;
+
+  --aurora-color1: rgba(200, 160, 255, 0.18);
+  --aurora-color2: rgba(140, 100, 220, 0.15);
 }
 
 @layer base {
@@ -126,6 +158,10 @@
     text-shadow: 0 0 14px rgba(255, 108, 182, 0.65), 0 0 32px rgba(255, 108, 182, 0.35);
   }
 
+  html.light .text-glow-neon {
+    text-shadow: 0 0 10px rgba(232, 72, 154, 0.45), 0 0 24px rgba(232, 72, 154, 0.2);
+  }
+
   .glass-panel {
     position: relative;
     overflow: hidden;
@@ -137,8 +173,55 @@
       0 0 0 0.5px rgba(255, 108, 182, 0.08);
   }
 
+  /* Gloss sweep highlight on dark cards */
+  .glass-panel::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        transparent 50%);
+    z-index: 0;
+  }
 
+  /* ---- Light mode glass ---- */
+  html.light .glass-panel {
+    background: linear-gradient(145deg,
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(240, 230, 255, 0.80) 100%) !important;
+    border: 1px solid rgba(180, 140, 240, 0.40) !important;
+    box-shadow:
+      /* Outer depth shadow */
+      0 8px 32px rgba(120, 80, 200, 0.14),
+      0 2px 8px rgba(120, 80, 200, 0.10),
+      /* Outer pink glow */
+      0 0 0 0.5px rgba(232, 72, 154, 0.18),
+      /* Inner top gloss highlight */
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      /* Inner left gloss edge */
+      inset 1px 0 0 rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(24px) saturate(2.2) brightness(1.04);
+    -webkit-backdrop-filter: blur(24px) saturate(2.2) brightness(1.04);
+  }
 
+  /* Gloss sweep on light mode cards */
+  html.light .glass-panel::before {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(255, 255, 255, 0.15) 40%,
+        transparent 60%) !important;
+  }
+
+  /* Subtle background gradient injected into sections in light mode
+     so the glass has something to blur & contrast against */
+  html.light main {
+    background:
+      radial-gradient(ellipse 80% 40% at 20% 20%, rgba(220, 170, 255, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 60%, rgba(255, 150, 200, 0.13) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 60% at 50% 90%, rgba(180, 140, 255, 0.12) 0%, transparent 60%),
+      #fdf6ff;
+  }
 
   .pt-safe {
     padding-top: env(safe-area-inset-top, 0px);

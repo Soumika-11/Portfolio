@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { LiquidButton } from "@/components/ui/liquid-glass-button"
+import { useScene } from "@/components/portfolio/scene-context"
 
 interface NavItem {
   name: string
@@ -19,11 +19,12 @@ interface NavBarProps {
   defaultActive?: string
 }
 
-
 export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBarProps) {
   const [mounted, setMounted] = useState(false)
   const [hoveredTab, setHoveredTab] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<string>(defaultActive)
+  const { state } = useScene()
+  const day = state.theme === "day"
 
   useEffect(() => {
     setMounted(true)
@@ -59,48 +60,64 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
     <nav aria-label="Main Navigation" className={cn("flex justify-center", className)}>
       <div className="relative">
         <motion.div
-          className="flex items-center gap-0.5 sm:gap-1 lg:gap-1 xl:gap-1.5 2xl:gap-2 bg-transparent py-1 sm:py-2 px-1 sm:px-2 rounded-full"
+          className="flex items-center gap-0.5 sm:gap-1 lg:gap-1.5 xl:gap-2 bg-transparent py-1 px-1"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
         >
           {items.map((item) => {
-            const Icon = item.icon
             const isActive = activeTab === item.name
+            const isHovered = hoveredTab === item.name
 
             return (
-              <LiquidButton
+              <Link
                 key={item.name}
-                asChild
+                href={item.url}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setActiveTab(item.name)
+                  const el = document.querySelector(item.url)
+                  if (el) el.scrollIntoView({ behavior: "smooth" })
+                }}
+                onMouseEnter={() => setHoveredTab(item.name)}
+                onMouseLeave={() => setHoveredTab(null)}
                 className={cn(
-                  "!rounded-full !h-auto transition-all duration-300",
+                  "relative cursor-pointer rounded-full font-medium transition-colors duration-200",
+                  "px-3 py-1.5 text-xs lg:px-3 lg:py-1.5 lg:text-xs xl:px-4 xl:py-2 xl:text-sm tracking-wide select-none",
                   isActive
-                    ? "shadow-[0_0_15px_rgba(255,108,182,0.3)] ring-1 ring-primary/60"
-                    : "hover:shadow-[0_0_15px_rgba(255,108,182,0.2)] hover:ring-1 hover:ring-primary/50"
+                    ? "text-primary font-semibold"
+                    : day
+                      ? "text-foreground/75 hover:text-foreground"
+                      : "text-white/75 hover:text-white"
                 )}
-                variant="default"
-                size="default"
               >
-                <Link
-                  href={item.url}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setActiveTab(item.name)
-                    const el = document.querySelector(item.url)
-                    if (el) el.scrollIntoView({ behavior: "smooth" })
-                  }}
-                  onMouseEnter={() => setHoveredTab(item.name)}
-                  onMouseLeave={() => setHoveredTab(null)}
-                  className={cn(
-                    "relative cursor-pointer font-medium transition-all duration-300",
-                    "text-white/75 hover:text-white tracking-normal sm:tracking-wide",
-                    "px-2.5 py-1.5 text-xs lg:px-2.5 lg:py-1.5 lg:text-xs xl:px-3.5 xl:py-2 xl:text-sm 2xl:px-5 2xl:py-2.5 2xl:text-base",
-                    isActive && "text-white font-bold"
+                {/* Active indicator pill */}
+                {isActive && (
+                  <motion.div
+                    layoutId="active-pill"
+                    className="absolute inset-0 rounded-full bg-primary/15 ring-1 ring-primary/40 -z-10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+
+                {/* Hover indicator pill */}
+                <AnimatePresence>
+                  {isHovered && !isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className={cn(
+                        "absolute inset-0 rounded-full -z-10",
+                        day ? "bg-primary/10" : "bg-white/10"
+                      )}
+                    />
                   )}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                </Link>
-              </LiquidButton>
+                </AnimatePresence>
+
+                <span className="relative z-10">{item.name}</span>
+              </Link>
             )
           })}
         </motion.div>

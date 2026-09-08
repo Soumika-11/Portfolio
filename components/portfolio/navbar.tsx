@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Home, User, Wrench, FolderOpen, Briefcase, FileText, Mail, BookOpen } from 'lucide-react'
+import { Home, User, Wrench, FolderOpen, Briefcase, FileText, Mail, BookOpen, Moon, Sun, Menu, X } from 'lucide-react'
 import { AnimeNavBar } from '@/components/ui/anime-navbar'
-import { Moon, Sun, PawPrint, Menu, X } from 'lucide-react'
 import { useScene } from './scene-context'
 
 const NAV_ITEMS = [
@@ -52,7 +51,9 @@ export function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
-        ? 'bg-background/70 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.3)] border-b border-border/40'
+        ? state.theme === 'day'
+          ? 'bg-background/80 backdrop-blur-md shadow-[0_4px_20px_rgba(155,120,220,0.05)]'
+          : 'bg-background/70 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.25)]'
         : 'bg-transparent'
         }`}
       style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0px))' }}
@@ -97,14 +98,15 @@ export function Navbar() {
               <Sun className="h-4 w-4 text-peach" />
             )}
           </button>
-          <button
-            type="button"
-            aria-label="Show interactive room hints"
-            onClick={() => window.dispatchEvent(new CustomEvent('show-hints'))}
-            className="grid h-10 w-10 min-w-[40px] place-items-center rounded-full bg-primary/15 ring-1 ring-primary/40 transition hover:bg-primary/25 outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm active:scale-95 touch-manipulation"
+          {/* Catch Up button */}
+          <a
+            href="mailto:dassoumika11@gmail.com"
+            aria-label="Send Soumika an email"
+            className="group inline-flex h-10 min-w-[40px] items-center justify-center gap-2 rounded-full bg-primary/90 px-3 md:px-4 text-primary-foreground ring-1 ring-primary/60 transition hover:bg-primary hover:shadow-[0_0_18px_rgba(255,108,182,0.55)] outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm active:scale-95 touch-manipulation shadow-[0_0_10px_rgba(255,108,182,0.3)]"
           >
-            <PawPrint className="h-4 w-4 text-primary" />
-          </button>
+            <Mail className="h-4 w-4 shrink-0" />
+            <span className="hidden md:inline text-xs font-semibold tracking-wide">Catch Up</span>
+          </a>
           {/* Mobile hamburger */}
           <button
             type="button"
@@ -133,7 +135,7 @@ export function Navbar() {
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="border-b border-border/40 overflow-hidden lg:hidden"
             style={{
-              background: 'rgba(14, 8, 26, 0.97)',
+              background: state.theme === 'day' ? 'rgba(253, 246, 255, 0.97)' : 'rgba(14, 8, 26, 0.97)',
               backdropFilter: 'blur(24px) saturate(1.6)',
               WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
               paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
@@ -149,7 +151,8 @@ export function Navbar() {
                       key={l.name}
                       href={l.url}
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition hover:bg-white/10 hover:text-foreground active:bg-primary/20 min-h-[44px] touch-manipulation"
+                      className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground active:bg-primary/20 min-h-[44px] touch-manipulation ${state.theme === 'day' ? 'hover:bg-black/5' : 'hover:bg-white/10'
+                        }`}
                     >
                       <Icon className="h-4 w-4 shrink-0 text-primary" />
                       <span>{l.name}</span>

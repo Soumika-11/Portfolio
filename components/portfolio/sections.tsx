@@ -456,6 +456,22 @@ export function ContactSection() {
               <s.icon className="h-5 w-5" />
             </a>
           ))}
+          {/* X / Twitter */}
+          <a
+            href="https://x.com/_Soumika11"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+            className="grid h-11 w-11 min-w-[44px] min-h-[44px] place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary touch-manipulation"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5 fill-current"
+              aria-hidden
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+            </svg>
+          </a>
         </div>
       </motion.div>
     </Section>
