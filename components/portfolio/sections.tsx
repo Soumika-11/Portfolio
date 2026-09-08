@@ -166,16 +166,18 @@ export function SkillsSection() {
   return (
     <Section id="skills">
       <SectionHeading eyebrow="Skills" title="My toolbox" />
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         {SKILLS.map((s) => (
-          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-4 sm:p-6">
-            <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-primary/15 ring-1 ring-primary/30">
-              <s.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-            </span>
-            <h3 className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-foreground">{s.group}</h3>
-            <ul className="mt-2.5 sm:mt-3 flex flex-wrap gap-1.5 sm:gap-2">
+          <motion.div key={s.group} variants={reveal} className="glass-panel rounded-2xl p-3 sm:p-5">
+            <div className="flex items-center gap-2">
+              <span className="grid h-7 w-7 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-lg sm:rounded-xl bg-primary/15 ring-1 ring-primary/30">
+                <s.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+              </span>
+              <h3 className="text-sm sm:text-base font-semibold text-foreground leading-tight">{s.group}</h3>
+            </div>
+            <ul className="mt-2.5 flex flex-wrap gap-1 sm:gap-1.5">
               {s.items.map((i) => (
-                <li key={i} className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] sm:text-xs text-muted-foreground ring-1 ring-border">
+                <li key={i} className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
                   {i}
                 </li>
               ))}

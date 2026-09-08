@@ -131,14 +131,17 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="glass-panel border-b border-border/40 overflow-hidden lg:hidden"
+            className="border-b border-border/40 overflow-hidden lg:hidden"
             style={{
+              background: 'rgba(14, 8, 26, 0.97)',
+              backdropFilter: 'blur(24px) saturate(1.6)',
+              WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
               paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
               paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
             }}
           >
             <div className="mx-auto max-w-2xl px-2 py-4 sm:px-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 max-h-[calc(82dvh-4rem)] overflow-y-auto overscroll-contain py-1">
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2 max-h-[calc(82dvh-4rem)] overflow-y-auto overscroll-contain py-1">
                 {NAV_ITEMS.map((l) => {
                   const Icon = l.icon
                   return (

@@ -1,10 +1,8 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import {
   motion,
   Variant,
-  VariantLabels,
-  Target,
-  TargetAndTransition,
   Transition,
 } from 'framer-motion';
 
@@ -26,6 +24,8 @@ export type TextRollProps = {
     };
   };
   onAnimationComplete?: () => void;
+  /** Interval (ms) between auto-play loops on touch devices. Default 3000. */
+  autoPlayInterval?: number;
 };
 
 export function TextRoll({
@@ -37,6 +37,7 @@ export function TextRoll({
   transition = { ease: 'easeIn' },
   variants,
   onAnimationComplete,
+  autoPlayInterval = 3000,
 }: TextRollProps) {
   const defaultVariants = {
     enter: {
@@ -51,11 +52,39 @@ export function TextRoll({
 
   const letters = children.split('');
 
+  // Touch-device auto-play
+  const [animState, setAnimState] = useState<'initial' | 'hover'>('initial');
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const touch = !window.matchMedia('(pointer: fine)').matches;
+    setIsTouchDevice(touch);
+    if (!touch) return;
+
+    const cycle = () => {
+      setAnimState('hover');
+      // Wait for roll-in + roll-out to finish, then snap back and pause
+      const rollDuration =
+        (getExitDelay(letters.length - 1) + duration) * 1000 + 200;
+      timerRef.current = setTimeout(() => {
+        setAnimState('initial');
+        timerRef.current = setTimeout(cycle, autoPlayInterval);
+      }, rollDuration);
+    };
+
+    timerRef.current = setTimeout(cycle, 800);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [autoPlayInterval, duration, getExitDelay, letters.length]);
+
   return (
     <motion.span
       className={className}
       initial="initial"
-      whileHover="hover"
+      animate={isTouchDevice ? animState : undefined}
+      whileHover={!isTouchDevice ? 'hover' : undefined}
       style={{ display: 'inline-flex', cursor: 'pointer' }}
     >
       {letters.map((letter, i) => (
