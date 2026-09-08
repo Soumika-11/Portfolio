@@ -14,7 +14,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] w-full flex-col justify-between items-center overflow-hidden pt-20 pb-4 sm:pt-24 sm:pb-6 lg:pt-28 lg:pb-6"
+      className="relative flex min-h-[100svh] w-full flex-col justify-between items-center overflow-x-clip pt-20 pb-4 sm:pt-24 sm:pb-6 lg:pt-28 lg:pb-6"
       style={{
         paddingLeft: 'max(0.75rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(0.75rem, env(safe-area-inset-right, 0px))',
@@ -23,15 +23,15 @@ export function Hero() {
       {/* Ambient gradient backdrop */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 transition-all duration-700"
+        className="absolute inset-0 -z-10 overflow-hidden pointer-events-none transition-all duration-700"
         style={{
           background: state.theme === 'day'
             ? 'radial-gradient(90% 70% at 75% 30%, rgba(220,160,255,0.35) 0%, transparent 60%), radial-gradient(80% 80% at 15% 80%, rgba(200,140,240,0.28) 0%, transparent 55%), linear-gradient(180deg, #fdf0ff 0%, #f5e8ff 100%)'
             : 'radial-gradient(90% 70% at 75% 30%, rgba(94,54,120,0.55) 0%, transparent 60%), radial-gradient(80% 80% at 15% 80%, rgba(60,38,90,0.5) 0%, transparent 55%), linear-gradient(180deg, #140b24 0%, #0d0718 100%)',
         }}
       />
-      <div className="my-auto mx-auto grid w-full max-w-7xl 2xl:max-w-[90rem] 3xl:max-w-[110rem] grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-8 xl:gap-12 px-3 xs:px-4 sm:px-6 lg:px-8">
-        <div className="order-2 lg:order-1">
+      <div className="my-auto mx-auto grid w-full max-w-7xl 2xl:max-w-[90rem] 3xl:max-w-[110rem] grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-2 xl:grid-cols-[1fr_1.1fr] lg:gap-8 xl:gap-12 px-3 xs:px-4 sm:px-6 lg:px-8">
+        <div className="order-2 lg:order-1 flex justify-center w-full">
           <HeroContent />
         </div>
 

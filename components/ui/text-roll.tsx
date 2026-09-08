@@ -1,97 +1,87 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
-import {
-  motion,
-  Variant,
-  Transition,
-} from 'framer-motion';
+'use client'
+
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence, type Transition } from 'framer-motion'
 
 export type TextRollProps = {
-  children: string;
-  duration?: number;
-  getEnterDelay?: (index: number) => number;
-  getExitDelay?: (index: number) => number;
-  className?: string;
-  transition?: Transition;
-  variants?: {
-    enter: {
-      initial: Variant;
-      animate: Variant;
-    };
-    exit: {
-      initial: Variant;
-      animate: Variant;
-    };
-  };
-  onAnimationComplete?: () => void;
-  /** Interval (ms) between auto-play loops on touch devices. Default 3000. */
-  autoPlayInterval?: number;
-};
+  children?: string
+  words?: string[]
+  duration?: number
+  className?: string
+  transition?: Transition
+  autoPlayInterval?: number
+}
 
 export function TextRoll({
   children,
-  duration = 0.4,
+  words,
+  duration = 0.35,
   className,
-  autoPlayInterval = 3500,
+  autoPlayInterval = 3200,
 }: TextRollProps) {
-  const letters = children.split('');
-  const [isRolled, setIsRolled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wordList = words && words.length > 0 ? words : children ? [children] : []
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    const cycle = () => {
-      setIsRolled((prev) => !prev);
-      timerRef.current = setTimeout(cycle, autoPlayInterval);
-    };
+    if (wordList.length <= 1) return
 
-    timerRef.current = setTimeout(cycle, autoPlayInterval);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [autoPlayInterval]);
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % wordList.length)
+    }, autoPlayInterval)
 
-  const active = isHovered || isRolled;
+    return () => clearInterval(timer)
+  }, [wordList.length, autoPlayInterval])
+
+  const activeWord = wordList[currentIndex] || ''
+  const letters = activeWord.split('')
+
+  const handleNext = () => {
+    if (wordList.length > 1) {
+      setCurrentIndex((prev) => (prev + 1) % wordList.length)
+    }
+  }
 
   return (
-    <motion.span
+    <span
       className={`inline-flex items-baseline cursor-pointer select-none ${className ?? ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ display: 'inline-flex' }}
+      onClick={handleNext}
+      onMouseEnter={handleNext}
+      title="Click or hover to switch role"
     >
-      {letters.map((letter, i) => (
-        <span
-          key={i}
-          className="relative inline-block overflow-hidden leading-[1.25] h-[1.25em] align-baseline"
-          aria-hidden="true"
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={`${activeWord}-${currentIndex}`}
+          className="inline-flex items-baseline"
+          initial="initial"
+          animate="animate"
+          exit="exit"
         >
-          <motion.span
-            className="inline-block"
-            animate={{ y: active ? '-100%' : '0%' }}
-            transition={{
-              duration,
-              ease: [0.33, 1, 0.68, 1],
-              delay: i * 0.02,
-            }}
-          >
-            {letter === ' ' ? '\u00A0' : letter}
-          </motion.span>
-          <motion.span
-            className="absolute left-0 top-full inline-block"
-            animate={{ y: active ? '-100%' : '0%' }}
-            transition={{
-              duration,
-              ease: [0.33, 1, 0.68, 1],
-              delay: i * 0.02,
-            }}
-          >
-            {letter === ' ' ? '\u00A0' : letter}
-          </motion.span>
-        </span>
-      ))}
-      <span className="sr-only">{children}</span>
-    </motion.span>
-  );
+          {letters.map((char, i) => (
+            <span
+              key={`${char}-${i}`}
+              className="relative inline-block overflow-hidden leading-[1.25] h-[1.25em] align-baseline"
+              aria-hidden="true"
+            >
+              <motion.span
+                className="inline-block"
+                variants={{
+                  initial: { y: '100%', opacity: 0 },
+                  animate: { y: '0%', opacity: 1 },
+                  exit: { y: '-100%', opacity: 0 },
+                }}
+                transition={{
+                  duration,
+                  ease: [0.33, 1, 0.68, 1],
+                  delay: i * 0.02,
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            </span>
+          ))}
+        </motion.span>
+      </AnimatePresence>
+      <span className="sr-only">{activeWord}</span>
+    </span>
+  )
 }
-
