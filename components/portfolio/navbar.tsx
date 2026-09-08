@@ -56,7 +56,7 @@ export function Navbar() {
           : 'bg-background/70 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.25)]'
         : 'bg-transparent'
         }`}
-      style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top, 0px))' }}
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
       <div className="relative mx-auto flex h-14 sm:h-16 max-w-[100rem] items-center justify-between px-3 xs:px-4 sm:px-8">
         {/* Logo — left */}
