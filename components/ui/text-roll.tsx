@@ -52,16 +52,11 @@ export function TextRoll({
 
   const letters = children.split('');
 
-  // Touch-device auto-play
+  // Auto-play on all devices
   const [animState, setAnimState] = useState<'initial' | 'hover'>('initial');
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const touch = !window.matchMedia('(pointer: fine)').matches;
-    setIsTouchDevice(touch);
-    if (!touch) return;
-
     const cycle = () => {
       setAnimState('hover');
       // Wait for roll-in + roll-out to finish, then snap back and pause
@@ -83,8 +78,7 @@ export function TextRoll({
     <motion.span
       className={className}
       initial="initial"
-      animate={isTouchDevice ? animState : undefined}
-      whileHover={!isTouchDevice ? 'hover' : undefined}
+      animate={animState}
       style={{ display: 'inline-flex', cursor: 'pointer' }}
     >
       {letters.map((letter, i) => (
