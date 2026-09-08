@@ -382,10 +382,6 @@ export function ExperienceSection() {
               className={`relative pl-8 xs:pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-8 md:sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-8 md:sm:pl-10'
                 }`}
             >
-              <span
-                className={`absolute left-1.5 top-2 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20 sm:left-auto ${i % 2 === 0 ? 'sm:-right-1.5' : 'sm:-left-1.5'
-                  }`}
-              />
               <div className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-5">
                 <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-accent">{e.period}</span>
                 <h3 className="mt-1 text-base sm:text-lg font-semibold text-foreground">{e.role}</h3>
