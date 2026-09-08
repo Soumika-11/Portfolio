@@ -73,7 +73,7 @@ const SKILLS: { group: string; icon: typeof Code2; items: string[] }[] = [
   {
     group: 'Frontend',
     icon: Layout,
-    items: ['React', 'Next.js', 'JavaScript', 'TypeScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'Vite'],
+    items: ['React', 'Next.js', 'JavaScript', 'TypeScript', 'HTML', 'CSS', 'Vite'],
   },
   {
     group: 'Backend',
@@ -83,7 +83,7 @@ const SKILLS: { group: string; icon: typeof Code2; items: string[] }[] = [
   {
     group: 'Databases',
     icon: Database,
-    items: ['PostgreSQL', 'MySQL', 'MSSQL', 'MongoDB'],
+    items: ['PostgreSQL', 'MySQL', 'MSSQL', 'MongoDB', 'VectorDB'],
   },
   {
     group: 'DevOps & Operations',
@@ -94,6 +94,12 @@ const SKILLS: { group: string; icon: typeof Code2; items: string[] }[] = [
     group: 'ML & Deep Learning',
     icon: Brain,
     items: [
+      'GenAI',
+      'LLM',
+      'Agentic AI',
+      'RAG',
+      'Computer Vision',
+      'VectorDB',
       'Ensemble Learning',
       'CNN',
       'U-Net',
@@ -247,7 +253,10 @@ export function SkillsSection() {
             </div>
             <ul className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
               {s.items.map((i) => (
-                <li key={i} className="rounded-full bg-white/5 px-2.5 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border">
+                <li
+                  key={i}
+                  className="rounded-full bg-white dark:bg-white/[0.08] px-3 py-1 text-xs sm:text-[13px] font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none"
+                >
                   {i}
                 </li>
               ))}
@@ -286,7 +295,7 @@ export function ProjectsSection() {
                   {p.stack.map((t) => (
                     <li
                       key={t}
-                      className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] sm:text-[11px] text-muted-foreground ring-1 ring-border"
+                      className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none"
                     >
                       {t}
                     </li>
@@ -389,7 +398,7 @@ export function PublicationsSection() {
                   <span className="rounded-full bg-accent/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
                     IEEE Co-Sponsored
                   </span>
-                  <span className="rounded-full bg-white/5 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs text-muted-foreground ring-1 ring-border">
+                  <span className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none">
                     {pub.dates}
                   </span>
                 </div>
@@ -404,18 +413,18 @@ export function PublicationsSection() {
                 </div>
 
                 {/* Authors Box */}
-                <div className="rounded-xl bg-white/5 p-3 sm:p-3.5 ring-1 ring-border/60">
-                  <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-xl bg-white dark:bg-white/5 p-3 sm:p-3.5 border border-purple-200/90 dark:border-border/60 shadow-xs">
+                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
                     Authors:
                   </span>
-                  <p className="mt-1 text-xs leading-relaxed text-foreground/90 break-words">
+                  <p className="mt-1 text-xs leading-relaxed text-slate-900 dark:text-foreground/90 break-words">
                     {pub.authors.map((author, i) => (
                       <span key={author.name}>
                         <span
                           className={
                             author.isMe
                               ? 'font-bold text-primary underline underline-offset-2'
-                              : 'text-muted-foreground'
+                              : 'font-semibold text-slate-800 dark:text-purple-100'
                           }
                         >
                           {author.name}
@@ -435,7 +444,7 @@ export function PublicationsSection() {
                   {pub.highlights.map((h) => (
                     <li
                       key={h}
-                      className="rounded-full bg-white/5 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs text-muted-foreground ring-1 ring-border"
+                      className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-1 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none"
                     >
                       {h}
                     </li>

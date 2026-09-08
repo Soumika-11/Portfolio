@@ -24,5 +24,8 @@ export const AuroraBackgroundDemo = () => {
   )
 }
 
-export default AuroraBackgroundDemo
+import { HoverSliderDemo } from "./demo-animated-slideshow"
+export { HoverSliderDemo }
+export default HoverSliderDemo
+
 

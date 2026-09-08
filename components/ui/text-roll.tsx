@@ -30,89 +30,64 @@ export type TextRollProps = {
 
 export function TextRoll({
   children,
-  duration = 0.5,
-  getEnterDelay = (i) => i * 0.1,
-  getExitDelay = (i) => i * 0.1 + 0.2,
+  duration = 0.4,
   className,
-  transition = { ease: 'easeIn' },
-  variants,
-  onAnimationComplete,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 3500,
 }: TextRollProps) {
-  const defaultVariants = {
-    enter: {
-      initial: { rotateX: 0 } as Variant,
-      hover: { rotateX: 90 } as Variant,
-    },
-    exit: {
-      initial: { rotateX: -90 } as Variant,
-      hover: { rotateX: 0 } as Variant,
-    },
-  };
-
   const letters = children.split('');
-
-  // Auto-play on all devices
-  const [animState, setAnimState] = useState<'initial' | 'hover'>('initial');
+  const [isRolled, setIsRolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const cycle = () => {
-      setAnimState('hover');
-      // Wait for roll-in + roll-out to finish, then snap back and pause
-      const rollDuration =
-        (getExitDelay(letters.length - 1) + duration) * 1000 + 200;
-      timerRef.current = setTimeout(() => {
-        setAnimState('initial');
-        timerRef.current = setTimeout(cycle, autoPlayInterval);
-      }, rollDuration);
+      setIsRolled((prev) => !prev);
+      timerRef.current = setTimeout(cycle, autoPlayInterval);
     };
 
-    timerRef.current = setTimeout(cycle, 800);
+    timerRef.current = setTimeout(cycle, autoPlayInterval);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [autoPlayInterval, duration, getExitDelay, letters.length]);
+  }, [autoPlayInterval]);
+
+  const active = isHovered || isRolled;
 
   return (
     <motion.span
-      className={className}
-      initial="initial"
-      animate={animState}
-      style={{ display: 'inline-flex', cursor: 'pointer' }}
+      className={`inline-flex items-baseline cursor-pointer select-none ${className ?? ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ display: 'inline-flex' }}
     >
       {letters.map((letter, i) => (
         <span
           key={i}
-          className="relative inline-block [perspective:10000px] [transform-style:preserve-3d] [width:auto]"
+          className="relative inline-block overflow-hidden leading-[1.25] h-[1.25em] align-baseline"
           aria-hidden="true"
         >
           <motion.span
-            className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_25%]"
-            variants={{
-              initial: variants?.enter?.initial ?? defaultVariants.enter.initial,
-              hover: variants?.enter?.animate ?? defaultVariants.enter.hover,
+            className="inline-block"
+            animate={{ y: active ? '-100%' : '0%' }}
+            transition={{
+              duration,
+              ease: [0.33, 1, 0.68, 1],
+              delay: i * 0.02,
             }}
-            transition={{ ...transition, duration, delay: getEnterDelay(i) }}
           >
             {letter === ' ' ? '\u00A0' : letter}
           </motion.span>
           <motion.span
-            className="absolute inline-block [backface-visibility:hidden] [transform-origin:50%_100%]"
-            variants={{
-              initial: variants?.exit?.initial ?? defaultVariants.exit.initial,
-              hover: variants?.exit?.animate ?? defaultVariants.exit.hover,
+            className="absolute left-0 top-full inline-block"
+            animate={{ y: active ? '-100%' : '0%' }}
+            transition={{
+              duration,
+              ease: [0.33, 1, 0.68, 1],
+              delay: i * 0.02,
             }}
-            transition={{ ...transition, duration, delay: getExitDelay(i) }}
-            onAnimationComplete={
-              letters.length === i + 1 ? onAnimationComplete : undefined
-            }
           >
             {letter === ' ' ? '\u00A0' : letter}
           </motion.span>
-          <span className="invisible">
-            {letter === ' ' ? '\u00A0' : letter}
-          </span>
         </span>
       ))}
       <span className="sr-only">{children}</span>

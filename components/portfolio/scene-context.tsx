@@ -96,13 +96,15 @@ export function SceneProvider({ children }: { children: ReactNode }) {
   const toggleLamp = useCallback(() => dispatch({ type: 'TOGGLE_LAMP' }), [])
   const toggleTheme = useCallback(() => dispatch({ type: 'TOGGLE_THEME' }), [])
 
-  // Sync .light class on <html> so CSS variables flip for the whole page
+  // Sync .light and .dark classes on <html> so CSS variables and dark: classes flip for the whole page
   useEffect(() => {
     const html = document.documentElement
     if (state.theme === 'day') {
       html.classList.add('light')
+      html.classList.remove('dark')
     } else {
       html.classList.remove('light')
+      html.classList.add('dark')
     }
   }, [state.theme])
 

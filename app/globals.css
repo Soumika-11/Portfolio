@@ -87,22 +87,22 @@ html.light {
   color-scheme: light;
 
   --background: #fdf6ff;
-  --foreground: #1a0f2e;
+  --foreground: #120924;
   --card: #ffffff;
-  --card-foreground: #1a0f2e;
+  --card-foreground: #120924;
   --popover: #ffffff;
-  --popover-foreground: #1a0f2e;
+  --popover-foreground: #120924;
   --primary: #e8489a;
   --primary-foreground: #ffffff;
   --secondary: #ede6fa;
-  --secondary-foreground: #1a0f2e;
+  --secondary-foreground: #120924;
   --muted: #f0e8fc;
-  --muted-foreground: #6b5987;
+  --muted-foreground: #382654;
   --accent: #7c5cbf;
   --accent-foreground: #ffffff;
   --destructive: #dc2626;
-  --border: rgba(155, 120, 220, 0.22);
-  --input: rgba(155, 120, 220, 0.18);
+  --border: rgba(140, 100, 210, 0.28);
+  --input: rgba(140, 100, 210, 0.22);
   --ring: #e8489a;
 
   --neon: #e8489a;

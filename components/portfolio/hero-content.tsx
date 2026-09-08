@@ -2,8 +2,8 @@
 
 import { motion, type Variants } from 'framer-motion'
 import { ArrowRight, Download, Heart, PawPrint } from 'lucide-react'
-import { StatsPanel } from './stats-panel'
 import { TextRoll } from '@/components/ui/text-roll'
+import { StatsPanel } from './stats-panel'
 
 const container: Variants = {
   hidden: {},
@@ -45,13 +45,7 @@ export function HeroContent() {
         variants={item}
         className="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-2 text-base xs:text-lg sm:text-xl font-semibold uppercase tracking-wide text-accent"
       >
-        <TextRoll
-          duration={0.45}
-          getEnterDelay={(i) => i * 0.06}
-          getExitDelay={(i) => i * 0.06 + 0.15}
-        >
-          Full Stack Developer
-        </TextRoll>
+        <TextRoll>Full Stack Developer</TextRoll>
         <span className="font-mono text-primary">{'</>'}</span>
       </motion.p>
 
@@ -69,7 +63,7 @@ export function HeroContent() {
           className="group inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 sm:px-6 sm:py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]"
         >
           Explore My Work
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="h-4 w-4" />
         </a>
         <a
           href="/resume.pdf"
@@ -82,7 +76,7 @@ export function HeroContent() {
         </a>
       </motion.div>
 
-      <motion.div variants={item} className="mt-6 sm:mt-8 w-full">
+      <motion.div variants={item} className="mt-6 sm:mt-8 w-fit max-w-full">
         <StatsPanel />
       </motion.div>
     </motion.div>
