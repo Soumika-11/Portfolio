@@ -127,10 +127,62 @@
   }
 
   .glass-panel {
-    background: linear-gradient(135deg, rgba(43, 28, 74, 0.55), rgba(24, 16, 44, 0.4));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(198, 168, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg,
+        rgba(198, 168, 255, 0.10) 0%,
+        rgba(43, 28, 74, 0.08) 40%,
+        rgba(24, 16, 44, 0.06) 100%);
+    backdrop-filter: blur(32px) saturate(1.8) brightness(1.05);
+    -webkit-backdrop-filter: blur(32px) saturate(1.8) brightness(1.05);
+    border: 1px solid rgba(198, 168, 255, 0.22);
+    box-shadow:
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -1px 0 rgba(198, 168, 255, 0.08),
+      inset 1px 0 0 rgba(255, 255, 255, 0.05),
+      0 8px 32px rgba(0, 0, 0, 0.30),
+      0 2px 8px rgba(0, 0, 0, 0.20),
+      0 0 0 0.5px rgba(255, 108, 182, 0.08),
+      0 16px 48px rgba(100, 60, 160, 0.12);
+  }
+
+  /* Top gloss band — static glass highlight */
+  .glass-panel::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(160deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(255, 255, 255, 0.10) 22%,
+        rgba(255, 255, 255, 0.03) 45%,
+        transparent 55%);
+    z-index: 1;
+  }
+
+  /* Animated shimmer sweep */
+  .glass-panel::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    top: -60%;
+    left: -75%;
+    width: 50%;
+    height: 220%;
+    background: linear-gradient(105deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.09) 50%,
+        transparent 80%);
+    transform: skewX(-15deg);
+    animation: gloss-sweep 6s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  /* Ensure panel content always renders above gloss layers */
+  .glass-panel>* {
+    position: relative;
+    z-index: 3;
   }
 
   .pt-safe {
@@ -158,6 +210,27 @@
 }
 
 /* ---------- ambient keyframes ---------- */
+@keyframes gloss-sweep {
+  0% {
+    left: -75%;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  40% {
+    left: 130%;
+    opacity: 0;
+  }
+
+  100% {
+    left: 130%;
+    opacity: 0;
+  }
+}
+
 @keyframes floatUp {
   0% {
     transform: translateY(0) translateX(0);
