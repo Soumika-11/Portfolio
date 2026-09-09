@@ -8,6 +8,7 @@ import {
   playRandomCatSound,
   playGirlGreetingSound,
   getRandomWelcomingLine,
+  prepareInteractiveAudio,
   speakGreeting,
 } from '@/lib/sounds'
 import { useScene } from './scene-context'
@@ -163,6 +164,14 @@ export function RoomScene() {
   const lastGirlSpeech = useRef<string | undefined>(undefined)
   const roomRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    // Load speech voices immediately, then unlock Web Audio on the earliest touch event.
+    prepareInteractiveAudio()
+    const unlockAudio = () => prepareInteractiveAudio()
+    window.addEventListener('pointerdown', unlockAudio, { capture: true, once: true })
+    return () => window.removeEventListener('pointerdown', unlockAudio, { capture: true })
+  }, [])
+
   const showCatSpeech = (text: string, duration = 3000) => {
     setCatSpeech(text)
     if (catSpeechTimer.current) clearTimeout(catSpeechTimer.current)
@@ -227,11 +236,12 @@ export function RoomScene() {
   }
 
   const handleGirlClick = () => {
-    playGirlGreetingSound()
     const line = getRandomWelcomingLine(lastGirlSpeech.current)
     lastGirlSpeech.current = line
     showGirlSpeech(line)
+    // Queue speech first on Safari so the decorative chime cannot delay it.
     speakGreeting(line)
+    playGirlGreetingSound()
     activateGirl()
   }
 
@@ -248,7 +258,7 @@ export function RoomScene() {
     <div
       ref={roomRef}
       onClick={handleRoomClick}
-      className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl cursor-pointer"
+      className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl cursor-pointer touch-manipulation"
     >
       <Image
         src="/scene/room.png"

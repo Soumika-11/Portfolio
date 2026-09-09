@@ -135,7 +135,7 @@ export function Navbar() {
         </div>
 
         {/* Anime nav — centered for desktop/laptop */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
           <AnimeNavBar items={NAV_ITEMS} defaultActive="Home" />
         </div>
 
@@ -157,10 +157,10 @@ export function Navbar() {
           <a
             href="mailto:dassoumika11@gmail.com"
             aria-label="Send Soumika an email"
-            className="group inline-flex h-10 min-w-[40px] items-center justify-center gap-2 rounded-full bg-primary/90 px-3 md:px-4 text-primary-foreground ring-1 ring-primary/60 transition hover:bg-primary hover:shadow-[0_0_18px_rgba(255,108,182,0.55)] outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm active:scale-95 touch-manipulation shadow-[0_0_10px_rgba(255,108,182,0.3)] cursor-pointer"
+            className="group inline-flex h-10 min-w-[40px] items-center justify-center gap-2 rounded-full bg-primary/90 px-3 lg:px-4 text-primary-foreground ring-1 ring-primary/60 transition hover:bg-primary hover:shadow-[0_0_18px_rgba(255,108,182,0.55)] outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm active:scale-95 touch-manipulation shadow-[0_0_10px_rgba(255,108,182,0.3)] cursor-pointer"
           >
             <Mail className="h-4 w-4 shrink-0" />
-            <span className="hidden md:inline text-xs font-semibold tracking-wide">Catch Up</span>
+            <span className="hidden lg:inline text-xs font-semibold tracking-wide">Catch Up</span>
           </a>
           {/* Mobile hamburger */}
           <button
@@ -169,7 +169,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((v) => !v)}
-            className="grid h-10 w-10 min-w-[40px] place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 lg:hidden outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm bg-background/40 active:scale-95 touch-manipulation cursor-pointer"
+            className="grid h-10 w-10 min-w-[40px] place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 md:hidden outline-none focus-visible:ring-2 focus-visible:ring-primary backdrop-blur-sm bg-background/40 active:scale-95 touch-manipulation cursor-pointer"
           >
             {open ? <X className="h-4 w-4 text-primary" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -187,7 +187,7 @@ export function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 top-14 sm:top-16 bg-black/55 backdrop-blur-[2px] -z-10 lg:hidden"
+              className="fixed inset-0 top-14 sm:top-16 bg-black/55 backdrop-blur-[2px] -z-10 md:hidden"
               aria-hidden="true"
             />
 
@@ -200,7 +200,7 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="border-b border-border/40 shadow-2xl lg:hidden relative z-20"
+              className="border-b border-border/40 shadow-2xl md:hidden relative z-20"
               style={{
                 background:
                   state.theme === 'day'

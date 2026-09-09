@@ -219,10 +219,10 @@ export function AboutSection() {
   return (
     <Section id="about">
       <SectionHeading eyebrow="About" title="Nice to meet you" />
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
         <motion.p
           variants={reveal}
-          className="glass-panel rounded-2xl p-4 sm:p-6 text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground lg:col-span-2"
+          className="glass-panel rounded-2xl p-4 sm:p-6 text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground md:col-span-2"
         >
           I&apos;m Soumika, a Computer Science student and software engineer who loves turning fuzzy ideas into fast, delightful products. Currently pursuing my B.Tech at IEM Newtown, I specialize in full-stack development, backend systems, and AI/ML. When I&apos;m not shipping code, you&apos;ll find me with a warm cup of coffee and a very opinionated cat supervising my commits.
         </motion.p>
@@ -314,7 +314,7 @@ export function ServicesSection() {
       <SectionHeading eyebrow="Services" title="What I Build" />
       <motion.div variants={reveal} className="glass-panel rounded-3xl p-6 sm:p-10 md:p-12 overflow-hidden shadow-2xl">
         <HoverSlider className="w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8 lg:gap-12">
             <div className="flex flex-col space-y-3 sm:space-y-4">
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
                 Hover to explore
@@ -432,9 +432,9 @@ export function PublicationsSection() {
             variants={reveal}
             className="glass-panel group overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 transition hover:ring-primary/40"
           >
-            <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-center">
+            <div className="grid gap-6 sm:gap-8 md:grid-cols-12 md:items-center">
               {/* Image Preview & Redirect */}
-              <div className="relative lg:col-span-5">
+              <div className="relative md:col-span-5">
                 <a
                   href={pub.redirectUrl}
                   target="_blank"
@@ -474,7 +474,7 @@ export function PublicationsSection() {
               </div>
 
               {/* Publication Details */}
-              <div className="flex flex-col gap-3.5 sm:gap-4 lg:col-span-7">
+              <div className="flex flex-col gap-3.5 sm:gap-4 md:col-span-7">
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <span className="rounded-full bg-primary/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-primary ring-1 ring-primary/30">
                     {pub.venue}

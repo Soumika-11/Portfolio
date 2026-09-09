@@ -11,7 +11,7 @@ const STATS = [
 
 export function StatsPanel() {
   return (
-    <div className="glass-panel w-full rounded-2xl p-4 sm:p-5 md:p-6 grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-5 md:gap-6">
+    <div className="glass-panel w-full rounded-2xl p-4 sm:p-5 md:p-4 lg:p-6 grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 md:gap-3 lg:gap-6">
       {STATS.map((s) => (
         <div key={s.label} className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
           <span className="grid h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 place-items-center rounded-xl bg-primary/15 ring-1 ring-primary/30">

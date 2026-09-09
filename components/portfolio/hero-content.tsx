@@ -31,11 +31,11 @@ export function HeroContent() {
       variants={container}
       initial="hidden"
       animate="show"
-      className="relative z-10 w-full max-w-xl flex flex-col items-center text-center lg:items-start lg:text-left mx-auto lg:mx-0"
+      className="relative z-10 w-full max-w-xl flex flex-col items-center text-center md:items-start md:text-left mx-auto md:mx-0"
     >
       <motion.p
         variants={item}
-        className="flex items-center justify-center lg:justify-start gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary"
+        className="flex items-center justify-center md:justify-start gap-2 text-xs sm:text-sm md:text-xs lg:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary"
       >
         <PawPrint className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
         Hello, I&apos;m
@@ -43,7 +43,7 @@ export function HeroContent() {
 
       <motion.h1
         variants={item}
-        className="mt-2 flex items-center justify-center lg:justify-start gap-2 sm:gap-3 font-script text-5xl xs:text-6xl sm:text-7xl lg:text-8xl leading-none text-foreground text-glow-neon"
+        className="mt-2 flex items-center justify-center md:justify-start gap-2 sm:gap-3 font-script text-5xl xs:text-6xl sm:text-7xl md:text-6xl lg:text-8xl leading-none text-foreground text-glow-neon"
       >
         Soumika
         <Heart className="h-7 w-7 xs:h-8 xs:w-8 sm:h-10 sm:w-10 shrink-0 fill-primary text-primary" />
@@ -51,7 +51,7 @@ export function HeroContent() {
 
       <motion.div
         variants={item}
-        className="mt-2.5 sm:mt-3 flex items-center justify-center lg:justify-start gap-2 text-base xs:text-lg sm:text-xl font-semibold uppercase tracking-wide text-accent min-h-[1.75em]"
+        className="mt-2.5 sm:mt-3 flex items-center justify-center md:justify-start gap-2 text-base xs:text-lg sm:text-xl md:text-base lg:text-xl font-semibold uppercase tracking-wide text-accent min-h-[1.75em]"
       >
         <span className="inline-flex items-center">
           <Typewriter
@@ -71,13 +71,13 @@ export function HeroContent() {
 
       <motion.p
         variants={item}
-        className="mt-4 sm:mt-5 max-w-md text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground text-center lg:text-left mx-auto lg:mx-0"
+        className="mt-4 sm:mt-5 max-w-md text-pretty text-sm sm:text-base md:text-sm lg:text-base leading-relaxed text-muted-foreground text-center md:text-left mx-auto md:mx-0"
       >
         I build scalable web applications and delightful digital experiences with code,
         creativity and a lot of caffeine.
       </motion.p>
 
-      <motion.div variants={item} className="mt-6 sm:mt-7 flex flex-col xs:flex-row flex-wrap justify-center lg:justify-start items-center gap-2.5 sm:gap-3 w-full xs:w-auto">
+      <motion.div variants={item} className="mt-6 sm:mt-7 md:mt-5 lg:mt-7 flex flex-col xs:flex-row flex-wrap justify-center md:justify-start items-center gap-2.5 sm:gap-3 w-full xs:w-auto">
         <a
           href="#projects"
           className="group inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 sm:px-6 sm:py-3 text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98]"

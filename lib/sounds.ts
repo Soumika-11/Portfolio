@@ -5,6 +5,8 @@
  */
 
 let sharedAudioCtx: AudioContext | null = null
+let cachedFemaleVoice: SpeechSynthesisVoice | null = null
+let voiceListenerRegistered = false
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null
@@ -18,11 +20,35 @@ function getAudioContext(): AudioContext | null {
       sharedAudioCtx = new AudioContextClass()
     }
     if (sharedAudioCtx.state === 'suspended') {
-      sharedAudioCtx.resume()
+      void sharedAudioCtx.resume().catch(() => undefined)
     }
     return sharedAudioCtx
   } catch {
     return null
+  }
+}
+
+/**
+ * Warms Safari's audio and speech engines as early as its user-gesture policy allows.
+ * Calling this on pointer-down avoids waiting until the later click event on touch devices.
+ */
+export function prepareInteractiveAudio() {
+  const ctx = getAudioContext()
+  if (ctx?.state === 'suspended') {
+    void ctx.resume().catch(() => undefined)
+  }
+
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    const voices = window.speechSynthesis.getVoices()
+    if (voices.length > 0) {
+      cachedFemaleVoice = findFemaleVoice(voices)
+    } else if (!voiceListenerRegistered) {
+      voiceListenerRegistered = true
+      window.speechSynthesis.addEventListener('voiceschanged', () => {
+        cachedFemaleVoice = findFemaleVoice(window.speechSynthesis.getVoices())
+        voiceListenerRegistered = false
+      }, { once: true })
+    }
   }
 }
 
@@ -518,6 +544,10 @@ export function getFemaleVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices()
   if (!voices || voices.length === 0) return null
 
+  return findFemaleVoice(voices)
+}
+
+function findFemaleVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
   // 1. Filter out all voices with male identifiers
   const nonMale = voices.filter((v) => {
     const name = v.name.toLowerCase()
@@ -567,8 +597,6 @@ export function getFemaleVoice(): SpeechSynthesisVoice | null {
 export function speakGreeting(text: string) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
   try {
-    window.speechSynthesis.cancel()
-
     // Strip emojis for clean vocalization
     const cleanText = text
       .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
@@ -578,29 +606,33 @@ export function speakGreeting(text: string) {
     if (!cleanText) return
 
     const speakWithFemaleVoice = () => {
-      const femaleVoice = getFemaleVoice()
+      const femaleVoice = cachedFemaleVoice ?? getFemaleVoice()
       // Only speak if a confirmed female voice is present
       if (!femaleVoice) return
+
+      cachedFemaleVoice = femaleVoice
 
       const utterance = new SpeechSynthesisUtterance(cleanText)
       utterance.voice = femaleVoice
       utterance.pitch = 1.18
       utterance.rate = 1.02
       utterance.volume = 0.88
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume()
       window.speechSynthesis.speak(utterance)
     }
 
     const voices = window.speechSynthesis.getVoices()
     if (voices.length === 0) {
-      window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.addEventListener('voiceschanged', () => {
         speakWithFemaleVoice()
-      }
+      }, { once: true })
     } else {
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel()
+      }
       speakWithFemaleVoice()
     }
   } catch { }
 }
-
-
 
 
