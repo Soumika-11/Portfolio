@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
+import { useScene } from './scene-context'
 
-const MESSAGES = ['Try clicking the cat 🐱', 'Some things in this room are interactive…']
 const STORAGE_KEY = 'soumika-hints-seen'
 
 export function DiscoveryHints() {
+  const { state } = useScene()
   const [msg, setMsg] = useState<string | null>(null)
   const timers = useRef<ReturnType<typeof setTimeout>[]>([])
 
@@ -18,10 +19,17 @@ export function DiscoveryHints() {
 
   const runSequence = useCallback(() => {
     clearTimers()
-    setMsg(MESSAGES[0])
-    timers.current.push(setTimeout(() => setMsg(MESSAGES[1]), 4200))
+    const firstMsg = !state.hasInteracted
+      ? '✨ Tap the cozy room above to wake it up & play!'
+      : 'Try tapping the sleeping cat or laptop in the room! 🐾'
+    setMsg(firstMsg)
+    timers.current.push(
+      setTimeout(() => {
+        setMsg('5 hidden secrets to discover in the anime room… 🎮')
+      }, 4200),
+    )
     timers.current.push(setTimeout(() => setMsg(null), 8400))
-  }, [])
+  }, [state.hasInteracted])
 
   useEffect(() => {
     let firstTimer: ReturnType<typeof setTimeout>

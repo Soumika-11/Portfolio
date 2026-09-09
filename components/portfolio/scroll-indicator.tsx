@@ -2,8 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
+import { useScene } from './scene-context'
 
 export function ScrollIndicator() {
+  const { state } = useScene()
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     const target = document.getElementById('about')
@@ -20,7 +23,7 @@ export function ScrollIndicator() {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.6, duration: 0.8 }}
-      className="group flex flex-col items-center gap-1.5 sm:gap-2 text-muted-foreground transition-colors hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl px-4 py-2 touch-manipulation cursor-pointer select-none"
+      className="group flex flex-col items-center gap-1.5 sm:gap-2 text-muted-foreground transition-colors hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl px-4 py-2 touch-manipulation cursor-pointer select-none text-center"
     >
       <span className="flex h-7 w-4 sm:h-8 sm:w-4.5 items-start justify-center rounded-full border border-current p-1 transition-colors group-hover:border-primary">
         <motion.span
@@ -30,7 +33,7 @@ export function ScrollIndicator() {
         />
       </span>
       <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors group-hover:text-primary">
-        Scroll to explore
+        {!state.hasInteracted ? 'Scroll or tap room to play 🐾' : 'Scroll to explore'}
       </span>
       <motion.span
         animate={{ y: [0, 4, 0] }}

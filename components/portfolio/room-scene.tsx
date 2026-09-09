@@ -1,11 +1,29 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, PawPrint, Heart } from 'lucide-react'
+import { X, PawPrint, Heart, Sparkles } from 'lucide-react'
+import {
+  playRandomCatSound,
+  playGirlGreetingSound,
+  getRandomWelcomingLine,
+  speakGreeting,
+} from '@/lib/sounds'
 import { useScene } from './scene-context'
 import { LaptopCode } from './laptop-code'
+
+const TOTAL_SECRETS = 7
+
+const INTERACTIVE_HINTS = [
+  { id: 'cat', hint: '🐾 Hint: Try tapping the sleeping fluffy cat!' },
+  { id: 'laptop', hint: '💻 Hint: Take a peek at the open laptop screen!' },
+  { id: 'coffee', hint: '☕ Hint: Tap the pink coffee mug on the desk!' },
+  { id: 'lamp', hint: '💡 Hint: Click the glowing cat lamp on the window sill!' },
+  { id: 'neon', hint: '✨ Hint: Toggle the neon sign on the left wall!' },
+  { id: 'girl', hint: '👩‍💻 Hint: Tap Soumika to start coding!' },
+  { id: 'lights', hint: '🌟 Hint: Tap the fairy lights draped on the wall!' },
+]
 
 type Box = { left: string; top: string; width: string; height: string }
 
@@ -67,31 +85,18 @@ function GlowBloom({
   flicker?: boolean
 }) {
   return (
-    <>
-      <div
-        aria-hidden
-        className="pointer-events-none transition-opacity duration-500"
-        style={{
-          ...boxStyle(box),
-          opacity: on ? intensity : 0,
-          background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-          mixBlendMode: 'screen',
-          filter: 'blur(8px)',
-          animation: on && flicker ? 'neonFlicker 6s infinite' : 'none',
-        }}
-      />
-      {/* Local dimming that darkens the baked bulbs when off. */}
-      <div
-        aria-hidden
-        className="pointer-events-none transition-opacity duration-500"
-        style={{
-          ...boxStyle(box),
-          opacity: on ? 0 : 0.75,
-          background: 'radial-gradient(circle, rgba(8,4,18,0.9) 0%, rgba(8,4,18,0.2) 75%, transparent 100%)',
-          mixBlendMode: 'multiply',
-        }}
-      />
-    </>
+    <div
+      aria-hidden
+      className="pointer-events-none transition-all duration-400 rounded-full"
+      style={{
+        ...boxStyle(box),
+        opacity: on ? intensity : 0,
+        background: `radial-gradient(ellipse at center, ${color} 0%, rgba(255,255,255,0.3) 20%, transparent 72%)`,
+        mixBlendMode: 'screen',
+        filter: 'blur(8px)',
+        animation: on && flicker ? 'neonFlicker 6s infinite' : 'none',
+      }}
+    />
   )
 }
 
@@ -138,12 +143,36 @@ export function RoomScene() {
     wakeCat,
     activateGirl,
     toggleCoffee,
+    registerInteraction,
+    wakeUpRoom,
   } = useScene()
 
   const [hover, setHover] = useState<string | null>(null)
   const [coffeeBurst, setCoffeeBurst] = useState(0)
   const [lampBurst, setLampBurst] = useState(0)
   const [openLaptop, setOpenLaptop] = useState(false)
+  const [hint, setHint] = useState<string | null>(null)
+  const [catSpeech, setCatSpeech] = useState<string | null>(null)
+  const [catReactionBurst, setCatReactionBurst] = useState(0)
+  const [girlSpeech, setGirlSpeech] = useState<string | null>(null)
+  const hintTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const catSpeechTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const girlSpeechTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastCatSound = useRef<string | undefined>(undefined)
+  const lastGirlSpeech = useRef<string | undefined>(undefined)
+
+  const showCatSpeech = (text: string, duration = 3000) => {
+    setCatSpeech(text)
+    if (catSpeechTimer.current) clearTimeout(catSpeechTimer.current)
+    catSpeechTimer.current = setTimeout(() => setCatSpeech(null), duration)
+  }
+
+  const showGirlSpeech = (text: string, duration = 4500) => {
+    setGirlSpeech(text)
+    if (girlSpeechTimer.current) clearTimeout(girlSpeechTimer.current)
+    girlSpeechTimer.current = setTimeout(() => setGirlSpeech(null), duration)
+  }
 
   // Close laptop dialog on Escape
   useEffect(() => {
@@ -155,17 +184,70 @@ export function RoomScene() {
     return () => window.removeEventListener('keydown', onKey)
   }, [openLaptop])
 
+  const giveHint = () => {
+    const nextUnfound = INTERACTIVE_HINTS.find((h) => !state.discoveredItems.includes(h.id))
+    if (nextUnfound) {
+      setHint(nextUnfound.hint)
+      if (hintTimeout.current) clearTimeout(hintTimeout.current)
+      hintTimeout.current = setTimeout(() => setHint(null), 5500)
+    } else {
+      setHint('🎉 You discovered all 7 secrets!')
+      if (hintTimeout.current) clearTimeout(hintTimeout.current)
+      hintTimeout.current = setTimeout(() => setHint(null), 3500)
+    }
+  }
+
+  // Auto hint if user is idle for 6 seconds without finding the next secret
+  useEffect(() => {
+    if (!state.hasInteracted || state.discoveredItems.length >= TOTAL_SECRETS) return
+
+    if (idleTimer.current) clearTimeout(idleTimer.current)
+    idleTimer.current = setTimeout(() => {
+      giveHint()
+    }, 6000)
+
+    return () => {
+      if (idleTimer.current) clearTimeout(idleTimer.current)
+    }
+  }, [state.hasInteracted, state.discoveredItems.length])
+
+  const handleRoomClick = () => {
+    if (!state.hasInteracted) {
+      wakeUpRoom()
+    }
+  }
+
+  const handleCatClick = () => {
+    const sound = playRandomCatSound(lastCatSound.current)
+    lastCatSound.current = sound.type
+    showCatSpeech(sound.speech)
+    setCatReactionBurst((n) => n + 1)
+    wakeCat()
+  }
+
+  const handleGirlClick = () => {
+    playGirlGreetingSound()
+    const line = getRandomWelcomingLine(lastGirlSpeech.current)
+    lastGirlSpeech.current = line
+    showGirlSpeech(line)
+    speakGreeting(line)
+    activateGirl()
+  }
+
   const day = state.theme === 'day'
   const girlActive = state.girl !== 'idle'
-  const catAwake = state.cat !== 'sleeping'
-  const spilled = state.coffee === 'spilled'
 
+  // Scale dimming across all 5 light sources (lightsOffCount is 0 to 5)
+  const offFraction = lightsOffCount / 5
   const imageFilter = day
     ? 'brightness(1.16) saturate(1.08) contrast(0.97)'
-    : 'brightness(1) saturate(1.02)'
+    : `brightness(${Math.max(0.78, 1 - offFraction * 0.22)}) contrast(${1 + offFraction * 0.06})`
 
   return (
-    <div className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl">
+    <div
+      onClick={handleRoomClick}
+      className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl cursor-pointer"
+    >
       <Image
         src="/scene/room.png"
         alt="Soumika's cozy anime coding room at dusk: a cat-ear-headphone-wearing developer at her laptop, a pink MEOW DEVELOPER mug, a glowing cat lamp, a fluffy cat in matching headphones, and pink neon signs"
@@ -190,10 +272,10 @@ export function RoomScene() {
       {/* Global room darkening tied to how many lights are off */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+        className="pointer-events-none absolute inset-0 transition-opacity duration-600"
         style={{
-          opacity: day ? 0 : lightsOffCount * 0.16,
-          background: 'radial-gradient(120% 90% at 50% 45%, rgba(6,3,15,0.2) 0%, rgba(6,3,15,0.85) 100%)',
+          opacity: day ? 0 : offFraction * 0.35,
+          background: 'radial-gradient(120% 90% at 50% 50%, transparent 25%, rgba(8,4,18,0.75) 100%)',
           mixBlendMode: 'multiply',
         }}
       />
@@ -224,47 +306,27 @@ export function RoomScene() {
       {/* ---- neon sign bloom (FOCUS / CODE / CAFFEINE / CATNAPS) ---- */}
       <div
         aria-hidden
-        className="pointer-events-none absolute transition-opacity duration-300"
+        className="pointer-events-none absolute transition-all duration-400 rounded-full"
         style={{
           ...boxStyle(POS.neon),
-          opacity: state.neonSign ? (hover === 'neon' ? 1 : 0.7) : 0,
-          background: 'radial-gradient(circle, rgba(255,108,182,0.85) 0%, transparent 70%)',
+          opacity: state.neonSign ? (hover === 'neon' ? 1 : 0.8) : 0,
+          background: 'radial-gradient(ellipse at center, rgba(255,108,182,0.9) 0%, rgba(255,180,220,0.3) 25%, transparent 72%)',
           mixBlendMode: 'screen',
           filter: 'blur(10px)',
           animation: state.neonSign ? 'neonFlicker 6s infinite' : 'none',
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute transition-opacity duration-300"
-        style={{
-          ...boxStyle(POS.neon),
-          opacity: state.neonSign ? 0 : 0.82,
-          background: 'radial-gradient(circle, rgba(8,4,18,0.92) 0%, transparent 72%)',
-          mixBlendMode: 'multiply',
         }}
       />
 
       {/* ---- cat lamp bloom ---- */}
       <div
         aria-hidden
-        className="pointer-events-none absolute transition-opacity duration-400"
+        className="pointer-events-none absolute transition-all duration-400 rounded-full"
         style={{
           ...boxStyle(POS.lamp),
-          opacity: state.catLamp ? (hover === 'lamp' ? 1 : 0.8) : 0,
-          background: 'radial-gradient(circle, rgba(255,224,170,0.8) 0%, transparent 68%)',
+          opacity: state.catLamp ? (hover === 'lamp' ? 1 : 0.85) : 0,
+          background: 'radial-gradient(ellipse at center, rgba(255,224,170,0.9) 0%, rgba(255,245,210,0.4) 25%, transparent 68%)',
           mixBlendMode: 'screen',
-          filter: 'blur(6px)',
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute transition-opacity duration-400"
-        style={{
-          ...boxStyle(POS.lamp),
-          opacity: state.catLamp ? 0 : 0.7,
-          background: 'radial-gradient(circle, rgba(8,4,18,0.85) 0%, transparent 70%)',
-          mixBlendMode: 'multiply',
+          filter: 'blur(8px)',
         }}
       />
 
@@ -294,49 +356,24 @@ export function RoomScene() {
       )}
 
       {/* ---- coffee steam ---- */}
-      {!spilled && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute"
-          style={{ left: '40%', top: '66%', width: '4%', height: '10%' }}
-        >
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="absolute bottom-0 left-1/2 block h-8 w-1 -translate-x-1/2 rounded-full"
-              style={{
-                background: 'linear-gradient(to top, rgba(255,255,255,0.5), transparent)',
-                animation: `steamRise ${2.4 + i * 0.5}s ease-in-out ${i * 0.4}s infinite`,
-                filter: 'blur(2px)',
-                opacity: hover === 'coffee' ? 0.9 : 0.5,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* ---- spilled coffee overlay ---- */}
-      <AnimatePresence>
-        {spilled && (
-          <motion.div
-            key="spill"
-            aria-hidden
-            className="pointer-events-none absolute"
-            style={{ left: '30%', top: '85%', width: '26%', height: '9%' }}
-            initial={{ opacity: 0, scaleX: 0.2 }}
-            animate={{ opacity: 1, scaleX: 1 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-          >
-            <div
-              className="absolute inset-0 origin-left rounded-[50%]"
-              style={{
-                background: 'radial-gradient(ellipse at center, rgba(60,32,20,0.92) 0%, rgba(40,20,12,0.7) 55%, transparent 78%)',
-                filter: 'blur(1px)',
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute"
+        style={{ left: '40%', top: '66%', width: '4%', height: '10%' }}
+      >
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="absolute bottom-0 left-1/2 block h-8 w-1 -translate-x-1/2 rounded-full"
+            style={{
+              background: 'linear-gradient(to top, rgba(255,255,255,0.5), transparent)',
+              animation: `steamRise ${2.4 + i * 0.5}s ease-in-out ${i * 0.4}s infinite`,
+              filter: 'blur(2px)',
+              opacity: hover === 'coffee' ? 0.9 : 0.5,
+            }}
+          />
+        ))}
+      </div>
 
       {/* ================= interactive hotspots ================= */}
 
@@ -347,14 +384,15 @@ export function RoomScene() {
           type="button"
           aria-label={`Toggle ${l.label} ${state.lights[l.id] ? 'off' : 'on'}`}
           aria-pressed={state.lights[l.id]}
-          onClick={() => toggleLight(l.id)}
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleLight(l.id)
+          }}
           onMouseEnter={() => setHover(l.id)}
           onMouseLeave={() => setHover((h) => (h === l.id ? null : h))}
-          className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
           style={boxStyle(POS[l.id])}
-        >
-          <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent transition group-hover:ring-white/25 group-focus-visible:ring-primary/60" />
-        </button>
+        />
       ))}
 
       {/* Neon sign */}
@@ -362,13 +400,15 @@ export function RoomScene() {
         type="button"
         aria-label={`Toggle neon sign ${state.neonSign ? 'off' : 'on'}`}
         aria-pressed={state.neonSign}
-        onClick={toggleNeon}
+        onClick={(e) => {
+          e.stopPropagation()
+          toggleNeon()
+        }}
         onMouseEnter={() => setHover('neon')}
         onMouseLeave={() => setHover((h) => (h === 'neon' ? null : h))}
-        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.neon)}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent transition group-hover:ring-primary/40" />
         <Tooltip show={hover === 'neon'} align="left">Stay positive, ship code</Tooltip>
       </button>
 
@@ -377,16 +417,16 @@ export function RoomScene() {
         type="button"
         aria-label={`Toggle desk cat lamp ${state.catLamp ? 'off' : 'on'}`}
         aria-pressed={state.catLamp}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation()
           toggleLamp()
           setLampBurst((n) => n + 1)
         }}
         onMouseEnter={() => setHover('lamp')}
         onMouseLeave={() => setHover((h) => (h === 'lamp' ? null : h))}
-        className="group absolute z-20 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-20 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.lamp)}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-transparent transition group-hover:ring-white/25" />
         {lampBurst > 0 && (
           <span className="pointer-events-none absolute inset-0">
             {[0, 1, 2].map((i) => (
@@ -408,24 +448,19 @@ export function RoomScene() {
       {/* Coffee */}
       <button
         type="button"
-        aria-label={spilled ? 'Spilled coffee mug' : 'Coffee mug, fuel for the next deploy'}
-        onClick={() => {
-          if (spilled) return
+        aria-label="Coffee mug, fuel for the next deploy"
+        onClick={(e) => {
+          e.stopPropagation()
           toggleCoffee()
           setCoffeeBurst((n) => n + 1)
         }}
         onMouseEnter={() => setHover('coffee')}
         onMouseLeave={() => setHover((h) => (h === 'coffee' ? null : h))}
-        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.coffee)}
       >
-        <motion.span
-          className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent transition group-hover:ring-primary/30"
-          animate={coffeeBurst > 0 ? { rotate: [0, -6, 6, -3, 0] } : {}}
-          transition={{ duration: 0.5 }}
-        />
-        <Tooltip show={hover === 'coffee' && !spilled}>Fuel for the next deploy</Tooltip>
-        {coffeeBurst > 0 && !spilled && (
+        <Tooltip show={hover === 'coffee'}>Fuel for the next deploy</Tooltip>
+        {coffeeBurst > 0 && (
           <span key={`burst-${coffeeBurst}`} className="pointer-events-none absolute inset-x-0 top-0">
             {[0, 1, 2].map((i) => (
               <span
@@ -447,91 +482,199 @@ export function RoomScene() {
       <button
         type="button"
         aria-label="Open laptop code panel"
-        onClick={() => setOpenLaptop(true)}
+        onClick={(e) => {
+          e.stopPropagation()
+          registerInteraction('laptop')
+          setOpenLaptop(true)
+        }}
         onMouseEnter={() => setHover('laptop')}
         onMouseLeave={() => setHover((h) => (h === 'laptop' ? null : h))}
-        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-20 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.laptop)}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent transition group-hover:ring-[#b48cff]/40" />
         <Tooltip show={hover === 'laptop' && !openLaptop}>Peek at the code {'</>'}</Tooltip>
       </button>
 
       {/* Girl */}
       <button
         type="button"
-        aria-label="Ask Soumika to start coding"
-        onClick={activateGirl}
+        aria-label="Tap Soumika to say hello"
+        onClick={(e) => {
+          e.stopPropagation()
+          handleGirlClick()
+        }}
         onMouseEnter={() => setHover('girl')}
         onMouseLeave={() => setHover((h) => (h === 'girl' ? null : h))}
-        className="group absolute z-10 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-10 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.girl)}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-primary/25" />
-        <Tooltip show={hover === 'girl'} position="bottom">
-          {state.girl === 'typing' ? 'Deploying magic…' : 'Tap: start coding'}
+        <Tooltip show={hover === 'girl' && !girlSpeech} position="bottom">
+          {state.girl === 'typing' ? 'Say hello! 🌸' : 'Tap to say hello! 👩‍💻'}
         </Tooltip>
       </button>
+
+      {/* Girl welcoming speech bubble */}
+      <AnimatePresence>
+        {girlSpeech && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.88 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.9 }}
+            transition={{ type: 'spring', damping: 22, stiffness: 340 }}
+            className="absolute z-30 max-w-[64%] sm:max-w-[50%] rounded-2xl border border-primary/50 bg-[#160d26]/95 px-3 py-2 sm:px-4 sm:py-2.5 text-[11px] sm:text-xs md:text-sm font-medium text-white shadow-[0_0_25px_rgba(255,108,182,0.45)] backdrop-blur-md pointer-events-none select-none leading-snug"
+            style={{ left: '26%', top: '14%' }}
+          >
+            <div className="relative">
+              <span className="block text-primary font-bold text-[10px] sm:text-xs mb-0.5 tracking-wide">
+                Soumika 👩‍💻
+              </span>
+              <span>{girlSpeech}</span>
+            </div>
+            {/* Speech bubble pointer */}
+            <div
+              className="absolute -bottom-1.5 left-8 h-3 w-3 rotate-45 border-b border-r border-primary/50 bg-[#160d26]"
+              aria-hidden
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Cat */}
       <button
         type="button"
-        aria-label="Wake up the cat"
-        onClick={wakeCat}
+        aria-label={
+          state.cat === 'sleeping'
+            ? 'Wake up the cat with a meow'
+            : 'Pet the happy cat'
+        }
+        onClick={(e) => {
+          e.stopPropagation()
+          handleCatClick()
+        }}
         onMouseEnter={() => setHover('cat')}
         onMouseLeave={() => setHover((h) => (h === 'cat' ? null : h))}
-        className="group absolute z-20 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group absolute z-20 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
         style={boxStyle(POS.cat)}
       >
-        <motion.span
-          className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-transparent transition group-hover:ring-white/25"
-          animate={
-            catAwake && state.cat !== 'awake'
-              ? { y: [0, -3, 0], rotate: [0, 2, -1, 0] }
-              : {}
-          }
-          transition={{ duration: 0.9, repeat: state.cat === 'walking' ? Infinity : 0 }}
-        />
         {/* Zzz while sleeping / hovering */}
-        {(state.cat === 'sleeping' && hover === 'cat') && (
+        {state.cat === 'sleeping' && hover === 'cat' && (
           <span className="pointer-events-none absolute right-2 top-0 text-sm text-white/80" style={{ animation: 'zzz 1.6s ease-out infinite' }}>
             z
           </span>
         )}
-      </button>
-
-      {/* paw trail from cat toward mug while walking */}
-      <AnimatePresence>
-        {state.cat === 'walking' && (
-          <div aria-hidden className="pointer-events-none absolute inset-0 z-20">
-            {[0, 1, 2, 3].map((i) => (
+        {/* Floating paws / hearts on tap */}
+        {catReactionBurst > 0 && (
+          <span key={`cat-burst-${catReactionBurst}`} className="pointer-events-none absolute inset-x-0 -top-3">
+            {[0, 1, 2].map((i) => (
               <span
                 key={i}
-                className="absolute flex items-center justify-center text-primary"
+                className="absolute left-1/2 text-primary"
                 style={{
-                  left: `${78 - i * 9}%`,
-                  top: `${84 - i * 1.5}%`,
-                  animation: `pawTrail 1.2s ease-out ${i * 0.22}s forwards`,
+                  ['--p-drift' as string]: `${(i - 1) * 14}px`,
+                  animation: `floatUp 1.2s ease-out ${i * 0.12}s forwards`,
                 }}
               >
-                <PawPrint size={14} />
+                {i === 1 ? <PawPrint size={14} className="fill-primary text-primary" /> : <Heart size={14} className="fill-primary text-primary" />}
               </span>
             ))}
-          </div>
+          </span>
+        )}
+      </button>
+
+      {/* Cat speech bubble for meow and purr */}
+      <AnimatePresence>
+        {catSpeech && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.88 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className="absolute z-30 rounded-2xl border border-primary/50 bg-[#160d26]/95 px-3 py-1.5 text-xs sm:text-sm font-semibold text-primary shadow-[0_0_20px_rgba(255,108,182,0.45)] backdrop-blur-md pointer-events-none select-none"
+            style={{ left: '64%', top: '54%' }}
+          >
+            {catSpeech}
+          </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Cat speech bubble after spill */}
+      {/* ================= Interactive Discovery HUD with Hint ================= */}
+      {state.hasInteracted && (
+        <motion.button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            giveHint()
+          }}
+          title="Click for a hint"
+          className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-25 flex items-center gap-1.5 rounded-full border border-primary/40 bg-black/75 hover:bg-black/90 px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-semibold text-foreground backdrop-blur-md shadow-lg select-none cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" style={{ animationDuration: '6s' }} />
+          <span>
+            Room Explorer: <strong className="text-primary">{Math.min(state.discoveredItems.length, TOTAL_SECRETS)}</strong>/{TOTAL_SECRETS}
+          </span>
+          {state.discoveredItems.length < TOTAL_SECRETS ? (
+            <span className="ml-1 flex items-center gap-0.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/30 animate-pulse">
+              💡 Hint
+            </span>
+          ) : (
+            <span className="text-amber-300 font-bold ml-0.5 animate-bounce">🏆</span>
+          )}
+        </motion.button>
+      )}
+
+      {/* ================= Floating Hint Banner ================= */}
       <AnimatePresence>
-        {state.cat === 'spilledCoffee' && (
+        {hint && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
+            initial={{ opacity: 0, y: 14, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="glass-panel absolute z-30 rounded-2xl px-3 py-1.5 text-sm font-semibold text-foreground"
-            style={{ left: '62%', top: '64%' }}
+            exit={{ opacity: 0, y: 8, scale: 0.92 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            onClick={(e) => {
+              e.stopPropagation()
+              setHint(null)
+            }}
+            className="pointer-events-auto absolute bottom-4 sm:bottom-6 left-1/2 z-50 -translate-x-1/2 max-w-[92%] rounded-full border-2 border-primary/70 bg-[#160d26]/95 px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-[0_0_35px_rgba(255,108,182,0.6)] backdrop-blur-xl flex items-center gap-2 cursor-pointer select-none whitespace-nowrap"
           >
-            Oops.
+            <Sparkles className="h-4 w-4 text-primary shrink-0 animate-spin" style={{ animationDuration: '4s' }} />
+            <span>{hint}</span>
+            <span className="text-[10px] text-pink-300 font-normal ml-1 border border-primary/40 rounded-full px-1.5 py-0.5">tap to close</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ================= Initial Tap to Wake Up Room Overlay ================= */}
+      <AnimatePresence>
+        {!state.hasInteracted && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            onClick={(e) => {
+              e.stopPropagation()
+              wakeUpRoom()
+            }}
+            className="absolute inset-0 z-35 flex cursor-pointer flex-col items-center justify-center bg-black/55 backdrop-blur-[2px] p-4 text-center select-none"
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 8 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="glass-panel relative flex flex-col items-center gap-1.5 sm:gap-2 rounded-2xl border border-primary/40 bg-[#160d26]/90 px-6 py-4 sm:px-8 sm:py-5 shadow-[0_0_40px_rgba(255,108,182,0.35)] backdrop-blur-md"
+            >
+              <h3 className="font-script text-2xl sm:text-3xl text-foreground text-glow-neon">
+                Room is sleeping
+              </h3>
+              <p className="text-xs sm:text-sm font-medium text-primary animate-pulse">
+                Tap to wake up the room
+              </p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

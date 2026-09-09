@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { RoomScene } from './room-scene'
 import { HeroContent } from './hero-content'
-import { MousePointer2 } from 'lucide-react'
 import { Particles } from './particles'
 import { ScrollIndicator } from './scroll-indicator'
 import { useScene } from './scene-context'
@@ -44,16 +43,6 @@ export function Hero() {
           <div style={{ transform: 'translateZ(0)' }} className="lg:scale-[1.04] xl:scale-[1.06] lg:origin-right">
             <RoomScene />
           </div>
-
-          <motion.div
-            className="absolute bottom-2 right-2 sm:-bottom-4 sm:right-4 flex items-center gap-1.5 rounded-full border border-primary/20 bg-black/60 sm:bg-black/40 px-2.5 py-1 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-medium tracking-wide text-primary/90 backdrop-blur-md lg:bottom-0 lg:right-0 shadow-lg pointer-events-none"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-          >
-            <MousePointer2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary" />
-            <span>Tap to play</span>
-          </motion.div>
         </motion.div>
       </div>
 

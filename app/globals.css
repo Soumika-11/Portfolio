@@ -163,7 +163,6 @@ html.light {
   }
 
   .glass-panel {
-    position: relative;
     overflow: hidden;
     background: #1b1330;
     border: 1px solid rgba(198, 168, 255, 0.18);
@@ -171,6 +170,10 @@ html.light {
       0 4px 24px rgba(0, 0, 0, 0.35),
       0 1px 4px rgba(0, 0, 0, 0.20),
       0 0 0 0.5px rgba(255, 108, 182, 0.08);
+  }
+
+  .glass-panel:not(.absolute):not(.fixed) {
+    position: relative;
   }
 
   /* Gloss sweep highlight on dark cards */

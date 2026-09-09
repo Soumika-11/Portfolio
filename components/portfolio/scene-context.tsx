@@ -24,6 +24,8 @@ export type SceneState = {
   neonSign: boolean
   catLamp: boolean
   theme: ThemeMode
+  hasInteracted: boolean
+  discoveredItems: string[]
 }
 
 type Action =
@@ -34,6 +36,8 @@ type Action =
   | { type: 'TOGGLE_NEON' }
   | { type: 'TOGGLE_LAMP' }
   | { type: 'TOGGLE_THEME' }
+  | { type: 'REGISTER_INTERACTION'; itemId: string }
+  | { type: 'WAKE_UP_ROOM' }
 
 const initialState: SceneState = {
   lights: { light1: true, light2: true, light3: true },
@@ -43,6 +47,8 @@ const initialState: SceneState = {
   neonSign: true,
   catLamp: true,
   theme: 'night',
+  hasInteracted: false,
+  discoveredItems: [],
 }
 
 function reducer(state: SceneState, action: Action): SceneState {
@@ -50,7 +56,11 @@ function reducer(state: SceneState, action: Action): SceneState {
     case 'TOGGLE_LIGHT':
       return {
         ...state,
+        hasInteracted: true,
         lights: { ...state.lights, [action.light]: !state.lights[action.light] },
+        discoveredItems: state.discoveredItems.includes('lights')
+          ? state.discoveredItems
+          : [...state.discoveredItems, 'lights'],
       }
     case 'SET_CAT':
       return { ...state, cat: action.value }
@@ -59,11 +69,40 @@ function reducer(state: SceneState, action: Action): SceneState {
     case 'SET_COFFEE':
       return { ...state, coffee: action.value }
     case 'TOGGLE_NEON':
-      return { ...state, neonSign: !state.neonSign }
+      return {
+        ...state,
+        hasInteracted: true,
+        neonSign: !state.neonSign,
+        discoveredItems: state.discoveredItems.includes('neon')
+          ? state.discoveredItems
+          : [...state.discoveredItems, 'neon'],
+      }
     case 'TOGGLE_LAMP':
-      return { ...state, catLamp: !state.catLamp }
+      return {
+        ...state,
+        hasInteracted: true,
+        catLamp: !state.catLamp,
+        discoveredItems: state.discoveredItems.includes('lamp')
+          ? state.discoveredItems
+          : [...state.discoveredItems, 'lamp'],
+      }
     case 'TOGGLE_THEME':
       return { ...state, theme: state.theme === 'night' ? 'day' : 'night' }
+    case 'REGISTER_INTERACTION':
+      return {
+        ...state,
+        hasInteracted: true,
+        discoveredItems: state.discoveredItems.includes(action.itemId)
+          ? state.discoveredItems
+          : [...state.discoveredItems, action.itemId],
+      }
+    case 'WAKE_UP_ROOM':
+      return {
+        ...state,
+        hasInteracted: true,
+        neonSign: true,
+        catLamp: true,
+      }
     default:
       return state
   }
@@ -79,6 +118,8 @@ type SceneContextValue = {
   wakeCat: () => void
   activateGirl: () => void
   toggleCoffee: () => void
+  registerInteraction: (itemId: string) => void
+  wakeUpRoom: () => void
 }
 
 const SceneContext = createContext<SceneContextValue | null>(null)
@@ -87,6 +128,10 @@ export function SceneProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const catBusy = useRef(false)
   const girlTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const registerInteraction = useCallback((itemId: string) => {
+    dispatch({ type: 'REGISTER_INTERACTION', itemId })
+  }, [])
 
   const toggleLight = useCallback(
     (light: 'light1' | 'light2' | 'light3') => dispatch({ type: 'TOGGLE_LIGHT', light }),
@@ -109,44 +154,56 @@ export function SceneProvider({ children }: { children: ReactNode }) {
   }, [state.theme])
 
   const toggleCoffee = useCallback(() => {
+    dispatch({ type: 'REGISTER_INTERACTION', itemId: 'coffee' })
     dispatch({ type: 'SET_COFFEE', value: 'steaming' })
   }, [])
 
-  // Full cat wake -> walk -> spill sequence, guarded so it cannot re-trigger mid-run.
+  // Cat interaction: wake up with meow, or purr on subsequent petting. Never throws coffee.
   const wakeCat = useCallback(() => {
+    dispatch({ type: 'REGISTER_INTERACTION', itemId: 'cat' })
     if (catBusy.current) return
     catBusy.current = true
+
+    if (state.cat === 'sleeping') {
+      dispatch({ type: 'SET_CAT', value: 'waking' })
+      const t1 = setTimeout(() => {
+        dispatch({ type: 'SET_CAT', value: 'awake' })
+        catBusy.current = false
+      }, 900)
+      return () => clearTimeout(t1)
+    }
+
+    // When already awake: gentle happy bounce
     dispatch({ type: 'SET_CAT', value: 'waking' })
-    const t1 = setTimeout(() => dispatch({ type: 'SET_CAT', value: 'walking' }), 900)
-    const t2 = setTimeout(() => {
-      dispatch({ type: 'SET_CAT', value: 'spilledCoffee' })
-      dispatch({ type: 'SET_COFFEE', value: 'spilled' })
-    }, 2100)
-    const t3 = setTimeout(() => {
+    const t = setTimeout(() => {
       dispatch({ type: 'SET_CAT', value: 'awake' })
       catBusy.current = false
-    }, 3600)
-    return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-      clearTimeout(t3)
-    }
-  }, [])
+    }, 700)
+    return () => clearTimeout(t)
+  }, [state.cat])
 
   // Girl looks at screen, starts typing, then eases back to idle.
   const activateGirl = useCallback(() => {
+    dispatch({ type: 'REGISTER_INTERACTION', itemId: 'girl' })
     if (girlTimer.current) clearTimeout(girlTimer.current)
     dispatch({ type: 'SET_GIRL', value: 'looking' })
     setTimeout(() => dispatch({ type: 'SET_GIRL', value: 'typing' }), 650)
     girlTimer.current = setTimeout(() => dispatch({ type: 'SET_GIRL', value: 'idle' }), 9000)
   }, [])
 
+  const wakeUpRoom = useCallback(() => {
+    dispatch({ type: 'WAKE_UP_ROOM' })
+  }, [])
+
+  // Count all 5 interactive light sources that can be switched off
   const lightsOffCount = useMemo(
     () =>
       (state.lights.light1 ? 0 : 1) +
       (state.lights.light2 ? 0 : 1) +
-      (state.lights.light3 ? 0 : 1),
-    [state.lights],
+      (state.lights.light3 ? 0 : 1) +
+      (state.neonSign ? 0 : 1) +
+      (state.catLamp ? 0 : 1),
+    [state.lights, state.neonSign, state.catLamp],
   )
 
   const value = useMemo(
@@ -160,8 +217,22 @@ export function SceneProvider({ children }: { children: ReactNode }) {
       wakeCat,
       activateGirl,
       toggleCoffee,
+      registerInteraction,
+      wakeUpRoom,
     }),
-    [state, lightsOffCount, toggleLight, toggleNeon, toggleLamp, toggleTheme, wakeCat, activateGirl, toggleCoffee],
+    [
+      state,
+      lightsOffCount,
+      toggleLight,
+      toggleNeon,
+      toggleLamp,
+      toggleTheme,
+      wakeCat,
+      activateGirl,
+      toggleCoffee,
+      registerInteraction,
+      wakeUpRoom,
+    ],
   )
 
   return <SceneContext.Provider value={value}>{children}</SceneContext.Provider>
