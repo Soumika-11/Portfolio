@@ -104,13 +104,12 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled || open
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled || open
           ? state.theme === 'day'
             ? 'bg-background/90 backdrop-blur-md shadow-[0_4px_20px_rgba(155,120,220,0.08)]'
             : 'bg-[#100a1c]/95 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
           : 'bg-transparent'
-      }`}
+        }`}
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
       <div className="relative mx-auto flex h-14 sm:h-16 max-w-[100rem] items-center justify-between px-3 xs:px-4 sm:px-8">
@@ -223,13 +222,12 @@ export function Navbar() {
                         key={l.name}
                         href={l.url}
                         onClick={(e) => handleNavClick(e, l.url)}
-                        className={`flex items-center gap-2.5 sm:gap-3 rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium transition cursor-pointer min-h-[44px] touch-manipulation select-none active:scale-[0.98] ${
-                          isActive
+                        className={`flex items-center gap-2.5 sm:gap-3 rounded-xl px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-medium transition cursor-pointer min-h-[44px] touch-manipulation select-none active:scale-[0.98] ${isActive
                             ? 'bg-primary/20 text-primary font-semibold ring-1 ring-primary/40 shadow-[0_0_12px_rgba(255,108,182,0.25)]'
                             : state.theme === 'day'
-                            ? 'text-foreground/80 hover:bg-black/5 hover:text-foreground'
-                            : 'text-muted-foreground hover:bg-white/10 hover:text-foreground'
-                        }`}
+                              ? 'text-foreground/80 hover:bg-black/5 hover:text-foreground'
+                              : 'text-muted-foreground hover:bg-white/10 hover:text-foreground'
+                          }`}
                       >
                         <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-primary' : 'text-primary/70'}`} />
                         <span className="truncate">{l.name}</span>
