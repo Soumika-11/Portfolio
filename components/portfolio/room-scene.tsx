@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, PawPrint, Heart, Sparkles } from 'lucide-react'
+import { X, PawPrint, Heart, Sparkles, GripVertical } from 'lucide-react'
 import {
   playRandomCatSound,
   playGirlGreetingSound,
@@ -161,6 +161,7 @@ export function RoomScene() {
   const girlSpeechTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastCatSound = useRef<string | undefined>(undefined)
   const lastGirlSpeech = useRef<string | undefined>(undefined)
+  const roomRef = useRef<HTMLDivElement>(null)
 
   const showCatSpeech = (text: string, duration = 3000) => {
     setCatSpeech(text)
@@ -245,6 +246,7 @@ export function RoomScene() {
 
   return (
     <div
+      ref={roomRef}
       onClick={handleRoomClick}
       className="relative aspect-[3/2] w-full select-none overflow-hidden rounded-2xl sm:rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl cursor-pointer"
     >
@@ -597,32 +599,46 @@ export function RoomScene() {
         )}
       </AnimatePresence>
 
-      {/* ================= Interactive Discovery HUD with Hint ================= */}
+      {/* ================= Interactive Discovery HUD with Hint (Draggable & Movable) ================= */}
       {state.hasInteracted && (
-        <motion.button
-          type="button"
+        <motion.div
+          drag
+          dragConstraints={roomRef}
+          dragElastic={0.08}
+          dragMomentum={false}
+          whileDrag={{
+            scale: 1.05,
+            cursor: 'grabbing',
+            zIndex: 60,
+            boxShadow: '0 0 25px rgba(255,108,182,0.65)',
+          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           onClick={(e) => {
             e.stopPropagation()
             giveHint()
           }}
-          title="Click for a hint"
-          className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-25 flex items-center gap-1.5 rounded-full border border-primary/40 bg-black/75 hover:bg-black/90 px-2.5 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-semibold text-foreground backdrop-blur-md shadow-lg select-none cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          role="button"
+          tabIndex={0}
+          title="Drag to move • Tap for hint"
+          className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 z-40 flex items-center gap-1 sm:gap-1.5 rounded-full border border-primary/40 bg-black/80 hover:bg-black/95 px-2 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-semibold text-foreground backdrop-blur-md shadow-lg select-none cursor-grab active:cursor-grabbing touch-none"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" style={{ animationDuration: '6s' }} />
-          <span>
+          <GripVertical className="h-3 w-3 text-muted-foreground/60 -ml-0.5 shrink-0" />
+          <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary animate-spin shrink-0" style={{ animationDuration: '6s' }} />
+          <span className="whitespace-nowrap">
             Room Explorer: <strong className="text-primary">{Math.min(state.discoveredItems.length, TOTAL_SECRETS)}</strong>/{TOTAL_SECRETS}
           </span>
           {state.discoveredItems.length < TOTAL_SECRETS ? (
-            <span className="ml-1 flex items-center gap-0.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/30 animate-pulse">
+            <span className="ml-1 flex items-center gap-0.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/30 animate-pulse shrink-0">
               💡 Hint
             </span>
           ) : (
-            <span className="text-amber-300 font-bold ml-0.5 animate-bounce">🏆</span>
+            <span className="text-amber-300 font-bold ml-0.5 animate-bounce shrink-0">🏆</span>
           )}
-        </motion.button>
+        </motion.div>
       )}
 
       {/* ================= Floating Hint Banner ================= */}
