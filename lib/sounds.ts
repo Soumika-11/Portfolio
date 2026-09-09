@@ -598,7 +598,7 @@ export function speakGreeting(text: string) {
     } else {
       speakWithFemaleVoice()
     }
-  } catch {}
+  } catch { }
 }
 
 
