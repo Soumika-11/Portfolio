@@ -222,9 +222,9 @@ const VOLUNTEERING = [
     role: 'Cloud Lead & Speaker',
     org: 'Google Developer Groups on Campus',
     chapter: 'University of Engineering & Management, Kolkata',
-    period: '2024 — 2025',
+    period: '2024 — 2026',
     summary:
-      'Led the Cloud domain on the core team of my university’s Google Developer Group — taking the mic at community sessions and helping run hands-on workshops that get students building with cloud and full-stack tech.',
+      'Led the Cloud domain on the core team of my university’s Google Developer Group — helping run community sessions and hands-on workshops, and closing out my tenure with my first talk as a speaker.',
     highlights: ['Tech Speaker', 'Google Cloud', 'Core Team', 'Workshops', 'Community Building'],
     links: [
       {
@@ -233,21 +233,36 @@ const VOLUNTEERING = [
       },
       { label: 'GDG Profile', href: 'https://gdg.community.dev/u/soumika/' },
     ],
-    eventsLabel: 'Events on the official GDG pages:',
+    eventsLabel: 'Talks & events:',
     events: [
+      {
+        title: 'Tech and Adda: Where Tech Meets Conversations',
+        tag: 'First Talk as Speaker',
+        date: 'May 16, 2026',
+        format: 'In-Person Session',
+        desc: 'My first session as a speaker — a cloud talk on how apps survive thousands of users, delivered at UEM Kolkata alongside co-speaker Biswajit Chatterjee, GDG IoT Lead. It was also my final event as Cloud Lead.',
+        link: 'https://www.linkedin.com/feed/update/urn:li:activity:7462911880844681216/',
+        images: [
+          {
+            src: '/volunteering/gdg-talk-1.jpg',
+            alt: 'Soumika Das presenting “How Apps Survive Thousands of Users” at a GDG on Campus UEM Kolkata session',
+          },
+          {
+            src: '/volunteering/gdg-talk-2.jpg',
+            alt: 'Soumika Das speaking to a room of students during her cloud session',
+          },
+          {
+            src: '/volunteering/gdg-talk-3.jpg',
+            alt: 'Soumika Das with a microphone in a Google Developer Groups on Campus tee',
+          },
+        ],
+      },
       {
         title: 'UEMK GDG Spotlight',
         date: 'Oct 14, 2024',
         format: 'Virtual Session',
         desc: 'Launch session introducing the new GDG on Campus core team and its domain leads, the chapter’s plans for the year, and an open Q&A with students.',
         link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-uemk-gdg-spotlight/',
-      },
-      {
-        title: 'StackUp!! Build, Scale, Deploy: Mastering Full-Stack Web Development',
-        date: 'Feb 9, 2025',
-        format: 'In-Person Workshop',
-        desc: 'Hands-on full-stack workshop at UEM Kolkata covering scalable frontends, efficient backends and cloud deployment, with sessions led by industry engineers.',
-        link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-stackup-build-scale-deploy-mastering-full-stack-web-development/',
       },
     ],
   },
@@ -699,8 +714,32 @@ export function VolunteeringSection() {
                     rel="noopener noreferrer"
                     className="group/ev rounded-xl bg-white dark:bg-white/5 p-3 sm:p-4 border border-purple-200/90 dark:border-border/60 shadow-xs transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
+                    {ev.images && (
+                      <div className="mb-3 sm:mb-4 grid aspect-[9/4] grid-cols-3 grid-rows-2 gap-1.5 sm:gap-2">
+                        {ev.images.map((img, i) => (
+                          <div
+                            key={img.src}
+                            className={`relative overflow-hidden rounded-lg sm:rounded-xl border border-white/10 bg-black/20 ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
+                          >
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover/ev:scale-105"
+                              sizes="(max-width: 768px) 66vw, 33vw"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        {ev.tag && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-primary-foreground">
+                            <Mic className="h-3 w-3" />
+                            {ev.tag}
+                          </span>
+                        )}
                         <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
                           {ev.date}
                         </span>
