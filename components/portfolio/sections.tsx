@@ -35,7 +35,7 @@ const reveal: Variants = {
 
 function SectionHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <div className="mb-8 sm:mb-12 flex flex-col items-center text-center px-2">
+    <div className="mb-6 sm:mb-8 flex flex-col items-center text-center px-2">
       <span className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.25em] text-primary">
         <PawPrint className="h-3.5 w-3.5" />
         {eyebrow}
@@ -61,7 +61,7 @@ function Section({
       whileInView="show"
       viewport={{ once: true, amount: 0.15 }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-      className={`mx-auto max-w-6xl 2xl:max-w-7xl 3xl:max-w-[90rem] scroll-mt-20 sm:scroll-mt-24 px-3 xs:px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 ${className}`}
+      className={`mx-auto max-w-6xl 2xl:max-w-7xl 3xl:max-w-[90rem] scroll-mt-20 sm:scroll-mt-24 px-3 xs:px-4 sm:px-6 py-7 sm:py-9 md:py-10 lg:py-12 ${className}`}
       style={{
         paddingLeft: 'max(0.75rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(0.75rem, env(safe-area-inset-right, 0px))',
@@ -474,6 +474,34 @@ export function ProjectsSection() {
   )
 }
 
+export function ExperienceSection() {
+  return (
+    <Section id="experience">
+      <SectionHeading eyebrow="Experience" title="My journey" />
+      <div className="relative mx-auto max-w-3xl">
+        <div className="absolute left-3 sm:left-1/2 top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-accent/40 to-transparent" />
+        <div className="flex flex-col gap-6 sm:gap-8">
+          {EXPERIENCE.map((e, i) => (
+            <motion.div
+              key={`${e.role}-${e.org}`}
+              variants={reveal}
+              className={`relative pl-8 xs:pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-8 md:sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-8 md:sm:pl-10'
+                }`}
+            >
+              <div className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-5">
+                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-accent">{e.period}</span>
+                <h3 className="mt-1 text-base sm:text-lg font-semibold text-foreground">{e.role}</h3>
+                <p className="text-xs sm:text-sm text-primary font-medium">{e.org}</p>
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{e.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </Section>
+  )
+}
+
 export function PublicationsSection() {
   return (
     <Section id="publications">
@@ -770,34 +798,6 @@ export function VolunteeringSection() {
   )
 }
 
-export function ExperienceSection() {
-  return (
-    <Section id="experience">
-      <SectionHeading eyebrow="Experience" title="My journey" />
-      <div className="relative mx-auto max-w-3xl">
-        <div className="absolute left-3 sm:left-1/2 top-2 bottom-2 w-px bg-gradient-to-b from-primary/60 via-accent/40 to-transparent" />
-        <div className="flex flex-col gap-6 sm:gap-8">
-          {EXPERIENCE.map((e, i) => (
-            <motion.div
-              key={`${e.role}-${e.org}`}
-              variants={reveal}
-              className={`relative pl-8 xs:pl-10 sm:w-1/2 sm:pl-0 ${i % 2 === 0 ? 'sm:self-start sm:pr-8 md:sm:pr-10 sm:text-right' : 'sm:self-end sm:pl-8 md:sm:pl-10'
-                }`}
-            >
-              <div className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-5">
-                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide text-accent">{e.period}</span>
-                <h3 className="mt-1 text-base sm:text-lg font-semibold text-foreground">{e.role}</h3>
-                <p className="text-xs sm:text-sm text-primary font-medium">{e.org}</p>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">{e.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </Section>
-  )
-}
-
 export function ResumeSection() {
   return (
     <Section id="resume">
@@ -835,14 +835,15 @@ export function ContactSection() {
         <p className="text-pretty text-xs sm:text-sm text-muted-foreground">
           Have a project, a role, or just want to talk about cats and clean code? My inbox is always open.
         </p>
-        <a
-          href="mailto:dassoumika11@gmail.com"
-          className="inline-flex w-full xs:w-auto max-w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 sm:px-6 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_24px_rgba(255,108,182,0.5)] transition hover:shadow-[0_0_34px_rgba(255,108,182,0.75)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
-        >
-          <Mail className="h-4 w-4 shrink-0" />
-          <span className="truncate sm:overflow-visible">dassoumika11@gmail.com</span>
-        </a>
         <div className="flex gap-3">
+          <a
+            href="mailto:dassoumika11@gmail.com"
+            aria-label="Email dassoumika11@gmail.com"
+            title="dassoumika11@gmail.com"
+            className="grid h-11 w-11 min-w-[44px] min-h-[44px] place-items-center rounded-full ring-1 ring-border transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary touch-manipulation"
+          >
+            <Mail className="h-5 w-5" />
+          </a>
           {[
             { icon: Code2, label: 'GitHub', href: 'https://github.com/Soumika-11' },
             { icon: LinkIcon, label: 'LinkedIn', href: 'https://www.linkedin.com/in/soumikadas/' },

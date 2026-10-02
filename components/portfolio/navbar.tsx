@@ -26,9 +26,9 @@ const NAV_ITEMS = [
   { name: 'About', url: '#about', icon: User },
   { name: 'Skills', url: '#skills', icon: Wrench },
   { name: 'Projects', url: '#projects', icon: FolderOpen },
+  { name: 'Experience', url: '#experience', icon: Briefcase },
   { name: 'Publications', url: '#publications', icon: BookOpen },
   { name: 'Volunteering', url: '#volunteering', icon: HeartHandshake },
-  { name: 'Experience', url: '#experience', icon: Briefcase },
   { name: 'Resume', url: '#resume', icon: FileText },
   { name: 'Contact', url: '#contact', icon: Mail },
 ]
