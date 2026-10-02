@@ -9,6 +9,7 @@ import {
   ProjectsSection,
   PublicationsSection,
   ExperienceSection,
+  CommunitySection,
   ResumeSection,
   ContactSection,
   Footer,
@@ -26,6 +27,7 @@ export default function Page() {
         <ProjectsSection />
         <PublicationsSection />
         <ExperienceSection />
+        <CommunitySection />
         <ResumeSection />
         <ContactSection />
       </main>

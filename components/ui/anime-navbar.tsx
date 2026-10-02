@@ -60,7 +60,7 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
     <nav aria-label="Main Navigation" className={cn("flex justify-center", className)}>
       <div className="relative">
         <motion.div
-          className="flex items-center gap-0.5 lg:gap-0.5 xl:gap-1.5 2xl:gap-2 bg-transparent py-1 px-1"
+          className="flex items-center gap-0 lg:gap-0.5 xl:gap-1.5 2xl:gap-2 bg-transparent py-1 px-1"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -83,7 +83,7 @@ export function AnimeNavBar({ items, className, defaultActive = "Home" }: NavBar
                 onMouseLeave={() => setHoveredTab(null)}
                 className={cn(
                   "relative cursor-pointer rounded-full font-medium transition-colors duration-200",
-                  "px-2.5 py-1 text-[11px] lg:px-2.5 lg:py-1 lg:text-[11px] xl:px-3.5 xl:py-1.5 xl:text-xs 2xl:px-4 2xl:py-2 2xl:text-sm tracking-wide select-none whitespace-nowrap",
+                  "px-1 py-1 text-[11px] lg:px-2 lg:py-1 lg:text-[11px] xl:px-3.5 xl:py-1.5 xl:text-xs 2xl:px-4 2xl:py-2 2xl:text-sm tracking-wide select-none whitespace-nowrap",
                   isActive
                     ? "text-primary font-semibold"
                     : day
