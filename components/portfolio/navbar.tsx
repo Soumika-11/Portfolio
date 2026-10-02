@@ -11,7 +11,7 @@ import {
   FileText,
   Mail,
   BookOpen,
-  Users,
+  HeartHandshake,
   Moon,
   Sun,
   Menu,
@@ -27,8 +27,8 @@ const NAV_ITEMS = [
   { name: 'Skills', url: '#skills', icon: Wrench },
   { name: 'Projects', url: '#projects', icon: FolderOpen },
   { name: 'Publications', url: '#publications', icon: BookOpen },
+  { name: 'Volunteering', url: '#volunteering', icon: HeartHandshake },
   { name: 'Experience', url: '#experience', icon: Briefcase },
-  { name: 'Community', url: '#community', icon: Users },
   { name: 'Resume', url: '#resume', icon: FileText },
   { name: 'Contact', url: '#contact', icon: Mail },
 ]

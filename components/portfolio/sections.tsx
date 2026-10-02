@@ -14,6 +14,7 @@ import {
   Layout,
   Link as LinkIcon,
   Mail,
+  Mic,
   PawPrint,
   Server,
   Sparkles,
@@ -215,34 +216,42 @@ const EXPERIENCE = [
   { role: 'Research Engineer Intern', org: 'IEDC, UEM Kolkata', period: 'Dec 2024 — Dec 2025', desc: 'Developed brain tumor classification via CNN-LSTM. Architected the "Satyameba" HPC cluster with Ansible automation.' },
 ]
 
-const COMMUNITY = {
-  role: 'Cloud Lead',
-  org: 'Google Developer Groups on Campus',
-  chapter: 'University of Engineering & Management, Kolkata',
-  period: '2024 — 2025',
-  summary:
-    'Led the Cloud domain on the core team of my university’s Google Developer Group — helping run community sessions and hands-on workshops that get students building with cloud and full-stack tech.',
-  highlights: ['Google Cloud', 'Core Team', 'Workshops', 'Community Building'],
-  chapterUrl:
-    'https://gdg.community.dev/gdg-on-campus-university-of-engineering-management-kolkata-india/',
-  profileUrl: 'https://gdg.community.dev/u/soumika/',
-  events: [
-    {
-      title: 'UEMK GDG Spotlight',
-      date: 'Oct 14, 2024',
-      format: 'Virtual Session',
-      desc: 'Launch session introducing the new GDG on Campus core team and its domain leads, the chapter’s plans for the year, and an open Q&A with students.',
-      link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-uemk-gdg-spotlight/',
-    },
-    {
-      title: 'StackUp!! Build, Scale, Deploy: Mastering Full-Stack Web Development',
-      date: 'Feb 9, 2025',
-      format: 'In-Person Workshop',
-      desc: 'Hands-on full-stack workshop at UEM Kolkata covering scalable frontends, efficient backends and cloud deployment, with sessions led by industry engineers.',
-      link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-stackup-build-scale-deploy-mastering-full-stack-web-development/',
-    },
-  ],
-}
+const VOLUNTEERING = [
+  {
+    badge: 'Google Developer Groups',
+    role: 'Cloud Lead & Speaker',
+    org: 'Google Developer Groups on Campus',
+    chapter: 'University of Engineering & Management, Kolkata',
+    period: '2024 — 2025',
+    summary:
+      'Led the Cloud domain on the core team of my university’s Google Developer Group — taking the mic at community sessions and helping run hands-on workshops that get students building with cloud and full-stack tech.',
+    highlights: ['Tech Speaker', 'Google Cloud', 'Core Team', 'Workshops', 'Community Building'],
+    links: [
+      {
+        label: 'Verify on GDG',
+        href: 'https://gdg.community.dev/gdg-on-campus-university-of-engineering-management-kolkata-india/',
+      },
+      { label: 'GDG Profile', href: 'https://gdg.community.dev/u/soumika/' },
+    ],
+    eventsLabel: 'Events on the official GDG pages:',
+    events: [
+      {
+        title: 'UEMK GDG Spotlight',
+        date: 'Oct 14, 2024',
+        format: 'Virtual Session',
+        desc: 'Launch session introducing the new GDG on Campus core team and its domain leads, the chapter’s plans for the year, and an open Q&A with students.',
+        link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-uemk-gdg-spotlight/',
+      },
+      {
+        title: 'StackUp!! Build, Scale, Deploy: Mastering Full-Stack Web Development',
+        date: 'Feb 9, 2025',
+        format: 'In-Person Workshop',
+        desc: 'Hands-on full-stack workshop at UEM Kolkata covering scalable frontends, efficient backends and cloud deployment, with sessions led by industry engineers.',
+        link: 'https://gdg.community.dev/events/details/google-gdg-on-campus-university-of-engineering-management-kolkata-india-presents-stackup-build-scale-deploy-mastering-full-stack-web-development/',
+      },
+    ],
+  },
+]
 
 export function AboutSection() {
   return (
@@ -594,6 +603,134 @@ export function PublicationsSection() {
   )
 }
 
+export function VolunteeringSection() {
+  return (
+    <Section id="volunteering">
+      <SectionHeading eyebrow="Volunteering" title="Giving back & speaking up" />
+      <div className="flex flex-col gap-6 sm:gap-8">
+        {VOLUNTEERING.map((v) => (
+          <motion.article
+            key={`${v.role}-${v.org}`}
+            variants={reveal}
+            className="glass-panel overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 transition hover:ring-primary/40"
+          >
+            <div className="relative grid gap-6 sm:gap-8 md:grid-cols-12">
+              {/* Role Details */}
+              <div className="flex flex-col gap-3.5 sm:gap-4 md:col-span-5">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="rounded-full bg-primary/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-primary ring-1 ring-primary/30">
+                    {v.badge}
+                  </span>
+                  <span className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none">
+                    {v.period}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="grid h-11 w-11 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-xl sm:rounded-2xl bg-primary/15 ring-1 ring-primary/30">
+                    <Mic className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+                  </span>
+                  <div>
+                    <h3 className="text-lg xs:text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                      {v.role}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-medium text-primary">{v.org}</p>
+                  </div>
+                </div>
+
+                <p className="text-xs sm:text-sm font-semibold text-foreground">{v.chapter}</p>
+
+                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+                  {v.summary}
+                </p>
+
+                {/* Highlights tags */}
+                <ul className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
+                  {v.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-1 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none"
+                    >
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Actions */}
+                <div className="flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3 pt-2">
+                  {v.links.map((l, i) =>
+                    i === 0 ? (
+                      <a
+                        key={l.label}
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,108,182,0.4)] transition hover:shadow-[0_0_28px_rgba(255,108,182,0.7)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
+                      >
+                        {l.label}
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </a>
+                    ) : (
+                      <a
+                        key={l.label}
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full ring-1 ring-border px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-medium text-foreground transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
+                      >
+                        <LinkIcon className="h-3.5 w-3.5" />
+                        {l.label}
+                      </a>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {/* Events */}
+              <div className="flex flex-col gap-3 sm:gap-4 md:col-span-7">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
+                  {v.eventsLabel}
+                </span>
+                {v.events.map((ev) => (
+                  <a
+                    key={ev.title}
+                    href={ev.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/ev rounded-xl bg-white dark:bg-white/5 p-3 sm:p-4 border border-purple-200/90 dark:border-border/60 shadow-xs transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
+                          {ev.date}
+                        </span>
+                        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-primary ring-1 ring-primary/30">
+                          {ev.format}
+                        </span>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover/ev:text-primary group-hover/ev:-translate-y-0.5 group-hover/ev:translate-x-0.5" />
+                    </div>
+                    <h4 className="mt-2.5 text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-foreground break-words">
+                      {ev.title}
+                    </h4>
+                    <p className="mt-1 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-muted-foreground">
+                      {ev.desc}
+                    </p>
+                    <span className="mt-2.5 inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-primary transition group-hover/ev:underline">
+                      {ev.link.includes('linkedin.com') ? 'View post on LinkedIn' : 'View event on GDG'}{' '}
+                      <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+    </Section>
+  )
+}
+
 export function ExperienceSection() {
   return (
     <Section id="experience">
@@ -618,122 +755,6 @@ export function ExperienceSection() {
           ))}
         </div>
       </div>
-    </Section>
-  )
-}
-
-export function CommunitySection() {
-  return (
-    <Section id="community">
-      <SectionHeading eyebrow="Community" title="Leading with GDG" />
-      <motion.article
-        variants={reveal}
-        className="glass-panel overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 transition hover:ring-primary/40"
-      >
-        <div className="relative grid gap-6 sm:gap-8 md:grid-cols-12">
-          {/* Role Details */}
-          <div className="flex flex-col gap-3.5 sm:gap-4 md:col-span-5">
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="rounded-full bg-primary/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-primary ring-1 ring-primary/30">
-                Google Developer Groups
-              </span>
-              <span className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none">
-                {COMMUNITY.period}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-xl sm:rounded-2xl bg-primary/15 ring-1 ring-primary/30">
-                <Cloud className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-              </span>
-              <div>
-                <h3 className="text-lg xs:text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                  {COMMUNITY.role}
-                </h3>
-                <p className="text-xs sm:text-sm font-medium text-primary">{COMMUNITY.org}</p>
-              </div>
-            </div>
-
-            <p className="text-xs sm:text-sm font-semibold text-foreground">{COMMUNITY.chapter}</p>
-
-            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
-              {COMMUNITY.summary}
-            </p>
-
-            {/* Highlights tags */}
-            <ul className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-              {COMMUNITY.highlights.map((h) => (
-                <li
-                  key={h}
-                  className="rounded-full bg-white dark:bg-white/[0.08] px-2.5 py-1 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-purple-50 border border-purple-200/90 dark:border-white/20 shadow-xs select-none"
-                >
-                  {h}
-                </li>
-              ))}
-            </ul>
-
-            {/* Actions */}
-            <div className="flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-2.5 sm:gap-3 pt-2">
-              <a
-                href={COMMUNITY.chapterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-primary px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,108,182,0.4)] transition hover:shadow-[0_0_28px_rgba(255,108,182,0.7)] outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
-              >
-                Verify on GDG
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
-              <a
-                href={COMMUNITY.profileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full ring-1 ring-border px-4 py-2.5 sm:px-5 text-xs sm:text-sm font-medium text-foreground transition hover:bg-white/10 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
-              >
-                <LinkIcon className="h-3.5 w-3.5" />
-                GDG Profile
-              </a>
-            </div>
-          </div>
-
-          {/* Events */}
-          <div className="flex flex-col gap-3 sm:gap-4 md:col-span-7">
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
-              Events on the official GDG pages:
-            </span>
-            {COMMUNITY.events.map((ev) => (
-              <a
-                key={ev.title}
-                href={ev.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/ev rounded-xl bg-white dark:bg-white/5 p-3 sm:p-4 border border-purple-200/90 dark:border-border/60 shadow-xs transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                    <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
-                      {ev.date}
-                    </span>
-                    <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-primary ring-1 ring-primary/30">
-                      {ev.format}
-                    </span>
-                  </div>
-                  <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover/ev:text-primary group-hover/ev:-translate-y-0.5 group-hover/ev:translate-x-0.5" />
-                </div>
-                <h4 className="mt-2.5 text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-foreground break-words">
-                  {ev.title}
-                </h4>
-                <p className="mt-1 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-muted-foreground">
-                  {ev.desc}
-                </p>
-                <span className="mt-2.5 inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-primary transition group-hover/ev:underline">
-                  {ev.link.includes('linkedin.com') ? 'View post on LinkedIn' : 'View event on GDG'}{' '}
-                  <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </motion.article>
     </Section>
   )
 }
