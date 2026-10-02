@@ -233,6 +233,25 @@ const VOLUNTEERING = [
       },
       { label: 'GDG Profile', href: 'https://gdg.community.dev/u/soumika/' },
     ],
+    gallery: {
+      tag: 'First Talk as Speaker',
+      caption: 'Click to view post on LinkedIn',
+      link: 'https://www.linkedin.com/feed/update/urn:li:activity:7462911880844681216/',
+      images: [
+        {
+          src: '/volunteering/gdg-talk-portrait.jpg',
+          alt: 'Soumika Das speaking with a microphone in a Google Developer Groups on Campus tee',
+        },
+        {
+          src: '/volunteering/gdg-talk-1.jpg',
+          alt: 'Soumika Das presenting “How Apps Survive Thousands of Users” at a GDG on Campus UEM Kolkata session',
+        },
+        {
+          src: '/volunteering/gdg-talk-2.jpg',
+          alt: 'Soumika Das speaking to a room of students during her cloud session',
+        },
+      ],
+    },
     eventsLabel: 'Talks & events:',
     events: [
       {
@@ -242,20 +261,6 @@ const VOLUNTEERING = [
         format: 'In-Person Session',
         desc: 'My first session as a speaker — a cloud talk on how apps survive thousands of users, delivered at UEM Kolkata alongside co-speaker Biswajit Chatterjee, GDG IoT Lead. It was also my final event as Cloud Lead.',
         link: 'https://www.linkedin.com/feed/update/urn:li:activity:7462911880844681216/',
-        images: [
-          {
-            src: '/volunteering/gdg-talk-1.jpg',
-            alt: 'Soumika Das presenting “How Apps Survive Thousands of Users” at a GDG on Campus UEM Kolkata session',
-          },
-          {
-            src: '/volunteering/gdg-talk-2.jpg',
-            alt: 'Soumika Das speaking to a room of students during her cloud session',
-          },
-          {
-            src: '/volunteering/gdg-talk-3.jpg',
-            alt: 'Soumika Das with a microphone in a Google Developer Groups on Campus tee',
-          },
-        ],
       },
       {
         title: 'UEMK GDG Spotlight',
@@ -657,9 +662,51 @@ export function VolunteeringSection() {
             variants={reveal}
             className="glass-panel overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 transition hover:ring-primary/40"
           >
-            <div className="relative grid gap-6 sm:gap-8 md:grid-cols-12">
+            <div className="relative grid gap-6 sm:gap-8 lg:grid-cols-12">
+              {/* Photo Gallery & Redirect */}
+              <a
+                href={v.gallery.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={v.gallery.caption}
+                className="group/img grid aspect-[5/4] grid-cols-3 grid-rows-2 gap-1.5 sm:aspect-[16/9] sm:gap-2 lg:col-span-5 lg:aspect-auto lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)_auto] rounded-xl sm:rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                {v.gallery.images.map((img, i) => (
+                  <div
+                    key={img.src}
+                    className={`relative overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-black/20 transition group-hover/img:border-primary/50 ${i === 0 ? 'col-span-2 row-span-2 lg:row-span-1' : 'lg:aspect-[3/2]'}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      className={`object-cover transition-transform duration-500 group-hover/img:scale-105 ${i === 0 ? 'object-[50%_18%]' : ''}`}
+                      sizes="(max-width: 1024px) 66vw, 40vw"
+                    />
+                    {i === 0 && (
+                      <>
+                        {/* Dark gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/20 opacity-80 transition-opacity duration-300 group-hover/img:opacity-100" />
+
+                        {/* Overlay content */}
+                        <div className="absolute inset-0 flex flex-col items-start justify-between p-2.5 xs:p-3 sm:p-4">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-primary-foreground shadow-lg">
+                            <Mic className="h-3 w-3" />
+                            {v.gallery.tag}
+                          </span>
+                          <div className="flex max-w-full items-center gap-2 rounded-lg bg-black/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[10px] sm:text-xs font-medium text-white/90 backdrop-blur-sm">
+                            <LinkIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary shrink-0" />
+                            <span className="truncate">{v.gallery.caption}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </a>
+
               {/* Role Details */}
-              <div className="flex flex-col gap-3.5 sm:gap-4 md:col-span-5">
+              <div className="flex flex-col gap-3.5 sm:gap-4 lg:col-span-7">
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <span className="rounded-full bg-primary/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold text-primary ring-1 ring-primary/30">
                     {v.badge}
@@ -669,23 +716,58 @@ export function VolunteeringSection() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-xl sm:rounded-2xl bg-primary/15 ring-1 ring-primary/30">
-                    <Mic className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                  </span>
-                  <div>
-                    <h3 className="text-lg xs:text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-                      {v.role}
-                    </h3>
-                    <p className="text-xs sm:text-sm font-medium text-primary">{v.org}</p>
-                  </div>
+                <div>
+                  <h3 className="text-lg xs:text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                    {v.role}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm font-medium text-primary">
+                    {v.org} · {v.chapter}
+                  </p>
                 </div>
-
-                <p className="text-xs sm:text-sm font-semibold text-foreground">{v.chapter}</p>
 
                 <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
                   {v.summary}
                 </p>
+
+                {/* Events */}
+                <div className="flex flex-col gap-2.5 sm:gap-3">
+                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
+                    {v.eventsLabel}
+                  </span>
+                  {v.events.map((ev) => (
+                    <a
+                      key={ev.title}
+                      href={ev.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/ev rounded-xl bg-white dark:bg-white/5 p-3 sm:p-3.5 border border-purple-200/90 dark:border-border/60 shadow-xs transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                          {ev.tag && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-primary-foreground">
+                              <Mic className="h-3 w-3" />
+                              {ev.tag}
+                            </span>
+                          )}
+                          <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
+                            {ev.date}
+                          </span>
+                          <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-primary ring-1 ring-primary/30">
+                            {ev.format}
+                          </span>
+                        </div>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover/ev:text-primary group-hover/ev:-translate-y-0.5 group-hover/ev:translate-x-0.5" />
+                      </div>
+                      <h4 className="mt-2 text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-foreground break-words">
+                        {ev.title}
+                      </h4>
+                      <p className="mt-1 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-muted-foreground">
+                        {ev.desc}
+                      </p>
+                    </a>
+                  ))}
+                </div>
 
                 {/* Highlights tags */}
                 <ul className="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
@@ -727,68 +809,6 @@ export function VolunteeringSection() {
                     ),
                   )}
                 </div>
-              </div>
-
-              {/* Events */}
-              <div className="flex flex-col gap-3 sm:gap-4 md:col-span-7">
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
-                  {v.eventsLabel}
-                </span>
-                {v.events.map((ev) => (
-                  <a
-                    key={ev.title}
-                    href={ev.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group/ev rounded-xl bg-white dark:bg-white/5 p-3 sm:p-4 border border-purple-200/90 dark:border-border/60 shadow-xs transition hover:border-primary/50 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    {ev.images && (
-                      <div className="mb-3 sm:mb-4 grid aspect-[9/4] grid-cols-3 grid-rows-2 gap-1.5 sm:gap-2">
-                        {ev.images.map((img, i) => (
-                          <div
-                            key={img.src}
-                            className={`relative overflow-hidden rounded-lg sm:rounded-xl border border-white/10 bg-black/20 ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
-                          >
-                            <Image
-                              src={img.src}
-                              alt={img.alt}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover/ev:scale-105"
-                              sizes="(max-width: 768px) 66vw, 33vw"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                        {ev.tag && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-primary-foreground">
-                            <Mic className="h-3 w-3" />
-                            {ev.tag}
-                          </span>
-                        )}
-                        <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-accent ring-1 ring-accent/30">
-                          {ev.date}
-                        </span>
-                        <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-primary ring-1 ring-primary/30">
-                          {ev.format}
-                        </span>
-                      </div>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover/ev:text-primary group-hover/ev:-translate-y-0.5 group-hover/ev:translate-x-0.5" />
-                    </div>
-                    <h4 className="mt-2.5 text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-foreground break-words">
-                      {ev.title}
-                    </h4>
-                    <p className="mt-1 text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-muted-foreground">
-                      {ev.desc}
-                    </p>
-                    <span className="mt-2.5 inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-primary transition group-hover/ev:underline">
-                      {ev.link.includes('linkedin.com') ? 'View post on LinkedIn' : 'View event on GDG'}{' '}
-                      <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                    </span>
-                  </a>
-                ))}
               </div>
             </div>
           </motion.article>
