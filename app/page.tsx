@@ -3,6 +3,7 @@ import { Navbar } from '@/components/portfolio/navbar'
 import { Hero } from '@/components/portfolio/hero'
 import { DiscoveryHints } from '@/components/portfolio/discovery-hints'
 import { Particles } from '@/components/portfolio/particles'
+import { PawTouch } from '@/components/portfolio/paw-touch'
 import {
   AboutSection,
   SkillsSection,
@@ -33,6 +34,7 @@ export default function Page() {
       </main>
       <Footer />
       <DiscoveryHints />
+      <PawTouch />
     </SceneProvider>
   )
 }
