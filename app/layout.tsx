@@ -42,7 +42,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} ${dancing.variable} bg-background dark`}>
       <body className="antialiased">
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <Analytics />
       </body>
     </html>
   )
