@@ -6,7 +6,8 @@ import { ResumeRedirect } from '@/components/portfolio/resume-redirect'
 // sync workflow, so this page never needs editing when the CV changes.
 const SITE = 'https://www.soumika.dev'
 const PDF = '/resume.pdf'
-const PREVIEW = `${SITE}/resume-preview.png`
+// Bump ?v= to make LinkedIn re-fetch the image after it has cached a bad one.
+const PREVIEW = `${SITE}/resume-preview.png?v=2`
 const TITLE = 'Soumika Das - Resume'
 const DESCRIPTION =
   'Software Engineer | Full-Stack & Backend Development | AI/ML. Always the latest version of my CV.'
@@ -21,7 +22,16 @@ export const metadata: Metadata = {
     siteName: 'Soumika.dev',
     title: TITLE,
     description: DESCRIPTION,
-    images: [{ url: PREVIEW, width: 1200, height: 630, alt: 'First page of Soumika Das’s resume' }],
+    images: [
+      {
+        url: PREVIEW,
+        secureUrl: PREVIEW,
+        type: 'image/png',
+        width: 1200,
+        height: 630,
+        alt: 'First page of Soumika Das’s resume',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
