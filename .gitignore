@@ -6,10 +6,34 @@ __v0_jsx-dev-runtime.ts
 .v0-trash/
 .vercel/
 
-# Environment variables
-.env*.local
+# AI agents, skills, and notes (private, local only)
+.claude/
+.cursor/
+.agents/
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+*.md
+!README.md
+
+# Environment variables and credentials
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+credentials*.json
+service-account*.json
+*-credentials.*
+secrets/
 
 # Common ignores
 node_modules
+.pnpm-store/
 .next/
 .DS_Store
